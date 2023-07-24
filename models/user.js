@@ -7,6 +7,8 @@ const UserSchema = new Schema({
   email: {type: String, unique: true, required: true },
   password: { type: String, required: true, minLength: 3, maxLength: 100 },
   createdAt: { type: Date, default: Date.now },
+  bio: { type: String, maxLength: 100 },
+  profilelink: { type: String, maxLength: 100 },
   lists: [{ type: Schema.Types.ObjectId, ref: "List" }]
 });
 

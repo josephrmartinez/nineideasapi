@@ -38,7 +38,9 @@ const ListSchema = new Schema({
   timestamp: { type: Date, default: Date.now },
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  status: { type: String, enum: ['draft', 'published'], default: 'draft' }
+  responses: [{ type: Schema.Types.ObjectId, ref: "Response" }],
+  status: { type: String, enum: ['draft', 'published'], default: 'draft' },
+  visibility: { type: String, enum: ['private', 'public'], default: 'private' },
 });
 
 ListSchema.virtual("timestamp_formatted").get(function(){
