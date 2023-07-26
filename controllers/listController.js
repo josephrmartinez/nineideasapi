@@ -4,7 +4,7 @@ const List = require('../models/list');
 const listController = {
   createList: asyncHandler(async (req, res) => {
     // Implement logic to create a new list based on the request data
-    // Example: const newList = new List({ ... });
+    const newList = new List({ ... });
     // Save the new list to the database
     // Example: await newList.save();
     // Respond with the created list details

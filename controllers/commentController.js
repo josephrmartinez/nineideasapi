@@ -18,6 +18,17 @@ const commentController = {
     await comment.save();
     res.json(comment);
   }),
+
+  updateComment: asyncHandler(async (req, res) => {
+    // IMPLEMENT UPDATE COMMENT FUNCTION
+  }),
+
+  deleteComment: asyncHandler(async (req, res) => {
+    await Comment.findByIdAndDelete(req.body.commentid)
+    // res.json() ???
+  }),
+
+
 };
 
 // Add more functions for updating and deleting comments if needed
