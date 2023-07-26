@@ -1,0 +1,4 @@
+- install express-session
+- create populatedb
+- run populatedb
+- test all GET routes

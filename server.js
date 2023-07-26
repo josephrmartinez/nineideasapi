@@ -2,8 +2,8 @@ const express = require("express")
 require('dotenv').config()
 const app = express()
 const mongoose = require('mongoose');
+const session = require("express-session");
 const cors = require('cors');
-
 
 // connect to MongoDB
 mongoose.set('strictQuery', false);
@@ -13,10 +13,10 @@ async function main() {
   await mongoose.connect(mongoDB);
 }
 
-
-
 app.use(cors());
 app.use(express.json())
+// Configure express-session
+app.use(session({ secret: "mango", resave: false, saveUninitialized: true }));
 
 
 // Import and use the routes
