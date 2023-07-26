@@ -35,7 +35,7 @@ const ListSchema = new Schema({
         required: true
       },
   ideas: [{ type: String, required: true }],
-  timestamp: { type: Date, default: Date.now },
+  dateAdded: { type: Date, default: Date.now },
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   responses: [{ type: Schema.Types.ObjectId, ref: "Response" }],
