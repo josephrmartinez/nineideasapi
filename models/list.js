@@ -34,24 +34,29 @@ const ListSchema = new Schema({
         },
         required: true
       },
-  ideas: [{ type: String, required: true }],
+  ideas: [{ type: String }],
   dateAdded: { type: Date, default: Date.now },
-  author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  author: { type: Schema.Types.ObjectId, ref: "User" },
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  responses: [{ type: Schema.Types.ObjectId, ref: "Response" }],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   status: { type: String, enum: ['draft', 'published'], default: 'draft' },
   visibility: { type: String, enum: ['private', 'public'], default: 'private' },
 });
 
-ListSchema.virtual("timestamp_formatted").get(function(){
-  return DateTime.fromJSDate(this.timestamp).toLocaleString(DateTime.DATETIME_SHORT)
+ListSchema.virtual("dateAdded_formatted").get(function(){
+  return DateTime.fromJSDate(this.dateAdded).toLocaleString(DateTime.DATETIME_SHORT)
 })
 
-// Virtual for list's URL
-ListSchema.virtual("url").get(function () {
-    // We don't use an arrow function as we'll need the this object
-    return `/list/${this._id}`;
-  });
 
 // Export model
 module.exports = mongoose.model("List", ListSchema);
+
+
+
+
+
+// Virtual for list's URL
+// ListSchema.virtual("url").get(function () {
+//     // We don't use an arrow function as we'll need the this object
+//     return `/list/${this._id}`;
+//   });
