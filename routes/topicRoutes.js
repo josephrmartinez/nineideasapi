@@ -6,9 +6,6 @@ const topicController = require('../controllers/topicController');
 router.post('/', topicController.createTopic);
 router.get('/', topicController.getAllTopics);
 router.get('/:id', topicController.getTopicById);
-router.put('/:id', topicController.updateTopic);
 router.delete('/:id', topicController.deleteTopic);
-
-// More topic-related routes if needed...
 
 module.exports = router;
