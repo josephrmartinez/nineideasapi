@@ -17,7 +17,11 @@ app.use(cors());
 app.use(express.json())
 // Configure express-session
 app.use(session({ secret: "mango", resave: false, saveUninitialized: true }));
-
+// CHECK Middleware function to access currentUser variable in all views
+app.use(function(req, res, next){
+    res.locals.currentUser = req.user;
+    next();
+})
 
 // Import and use the routes
 const userRoutes = require('./routes/userRoutes');
