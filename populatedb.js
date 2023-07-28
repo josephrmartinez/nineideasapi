@@ -28,24 +28,195 @@ console.log(
     console.log("Debug: About to connect");
     await mongoose.connect(mongoDB);
     console.log("Debug: Should be connected?");
-    // await createUsers();
+    await createUsers();
     // await createLists();
-    await createTopics();
+    await createTopics(topicsArray);
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
   }
   
-  async function topicCreate(name) {
-    const topic = new Topic({ name: name });
-    await topic.save();
-    topics.push(topic);
-    console.log(`Added topic: ${name}`);
+  async function createTopics(topicsArray) {
+    try {
+      const topicPromises = topicsArray.map(async (name) => {
+        const topic = new Topic({ name });
+        await topic.save();
+        return topic;
+      });
+  
+      const createdTopics = await Promise.all(topicPromises);
+      topics.push(...createdTopics);
+  
+      console.log(`Added ${createdTopics.length} topics.`);
+    } catch (error) {
+      console.error(`Error creating topics: ${error}`);
+    }
+  }
+  
+
+  async function userCreate(username, password, email, bio) {
+    const newUser = new User({ 
+        username,
+        password,
+        email,
+        bio
+     });
+    await newUser.save();
+    users.push(newUser);
+    console.log(`User topic: ${username}`);
   }
   
   
-  async function createTopics() {
-    console.log("Adding topics");
+  async function createUsers() {
+    console.log("Adding users");
     await Promise.all([
-      topicCreate("")
+        userCreate("josephm", "mango", "joseph.r.martinez@gmail.com", "josephm.dev"),
+        userCreate("peterg", "mango", "peterg@gmail.com", "thinking about moving to michigan"),
+        userCreate("sashan", "mango", "sashan@gmail.com", "writing a book"),
+        userCreate("timo", "mango", "timo@gmail.com", "timo.ai"),
+        userCreate("mahmoudh", "mango", "mahmoudh@gmail.com", "open to book suggestions"),
     ]);
   }
+
+
+const topicsArray = 
+  [
+    "Creative ways to repurpose household items",
+    "Ideas for hosting a memorable themed party",
+    "Unique ways to display artwork in your home",
+    "Creative ways to reduce waste in your daily life",
+    "Ideas for using technology to improve mental health",
+    "Creative ways to teach children about sustainability",
+    "Unique travel destinations off the beaten path",
+    "Ideas for starting a social impact project in your community",
+    "Creative ways to decorate a small apartment",
+    "Unique ideas for an outdoor workout routine",
+    "Ideas for using virtual reality technology for education or entertainment",
+    "Creative ways to customize your wardrobe on a budget",
+    "Unconventional home decor ideas",
+    "Ideas for hosting a successful online event or conference",
+    "Creative ways to celebrate cultural holidays and traditions with a twist",
+    "Unique ways to incorporate music into your daily routine",
+    "Ideas for starting a community gathering space",
+    "Creative ways to make your workspace more comfortable and productive",
+    "Unique ways to give back to your community",
+    "Unconventional ways to use social media to boost creativity",
+    "Creative challenges to push your artistic boundaries",
+    "Ways to incorporate mindfulness into your daily routine for a more expanded mind",
+    "Ways to foster creativity in the workplace",
+    "Mind-expanding experiences to broaden your perspective",
+    "Creative ways to change your living space for a more inspiring environment",
+    "Ways to incorporate more physical activity into your daily routine for a healthier mind and body",
+    "Creative writing prompts to expand your imagination",
+    "Mind-expanding places to go for inspiration",
+    "Ideas for challenging yourself to step outside of your comfort zone",
+    "Creative ways to overcome writer's block",
+    "Ways to cultivate a growth mindset for personal and professional development",
+    "Mind-expanding activities to do alone or with friends",
+    "Creative ways to incorporate more humor into your life for a lighter perspective",
+    "Challenging DIY projects to try for a sense of accomplishment",
+    "Ways to expand your knowledge and skills through online courses",
+    "Creative strategies for time management and productivity",
+    "Unique ways to gain new ideas or perspectives",
+    "Ideas for challenging yourself to embrace failure and learn from it.",
+    "Ideas for creating a fashion line for pets",
+    "Unique ways to approach cooking differently",
+    "Ideas for hosting a pop-up museum featuring bizarre collections",
+    "Creative ways to design a custom coffin or urn",
+    "Unique ways to incorporate fragrance into art",
+    "Areas of potential for virtual reality",
+    "Creative ways to use 3D printing for food and beverage production",
+    "Creative ways to design a themed miniature golf course",
+    "Ideas for creating a plant-based musical instrument",
+    "Creative ways to use artificial intelligence in fashion design",
+    "Unique ways to incorporate scent into interactive theater",
+    "Unusual ways to use herbs and spices in your cooking",
+    "Home garden possibilities",
+    "Ideas for incorporating mindfulness into your daily routine",
+    "Unconventional hobbies to try in your free time",
+    "Unique ways to organize your workspace",
+    "Ideas for hosting a DIY craft party",
+    "Creative ways to make your home more eco-friendly",
+    "Aspects of your personality you hope others appreciate",
+    "Your ideal work environment",
+    "Fun and unique date night ideas",
+    "Boutique hotel ideas. Location, style, and something special about the property.",
+    "Creative ways to transform your backyard into a cozy oasis",
+    "Unusual and eye-catching DIY wall art ideas",
+    "Ideas for using social media to promote a cause or charity",
+    "Unconventional ways to learn a new language",
+    "Ideas for connecting adults with new friends",
+    "Tips for practicing self-care",
+    "Unconventional ways to make money",
+    "Ways to give away $1,000",
+    "Creative ways to save money",
+    "Ideas for a unique and memorable vacation",
+    "Unconventional ways to get fit",
+    "Creative ways to de-stress",
+    "Ideas for parties that I would enjoy going to",
+    "Ways to spend one month in another country",
+    "Options for spending a gap year between high school and college",
+    "Hardcore ways to be more productive",
+    "Unconventional ways to connect with nature",
+    "Creative ways to give back to your community",
+    "The most pressing issues facing your community",
+    "Unconventional ways to entertain yourself",
+    "What makes a fulfilling and meaningful life?",
+    "Meetup groups that I would start or join",
+    "Unconventional ways to make friends",
+    "Specific ways to foster a happy and healthy relationship",
+    "Unconventional ways to travel the world",
+    "Ways to make a difference in the world",
+    "Things I would like to see change in my lifetime",
+    "Things that give me hope",
+    "Things I would do in a lucid dream.",
+    "What I would do with $100,000,000",
+    "Ways to connect with nature that will leave you feeling refreshed and rejuvenated",
+    "Acts of kindness that will make a positive impact on the lives of others",
+    "Good habits to form",
+    "Friendship building activities that will help you connect with others on a deeper level",
+    "Relationship advice to build and maintain healthy relationships",
+    "Travel experiences that will broaden your horizons and change your perspective on the world",
+    "Ways to make a difference in the world and leave it a better place", 
+    "The meaning of life: What are some options for the purpose of life?",
+    "What does it mean for us if God does exist?",
+    "What could the future of education look like?",
+    "What could the future of healthcare look like?",
+    "What could the future of transportation look like?",
+    "What will the future of food look like?",
+    "What will the future of war look like?",
+    "What will the future of the human race look like?",
+    "Innovative ways to utilize space in a tiny home",
+    "Artsy ideas for turning junk into jewellery",
+    "Methods for turning found objects into functional pieces of furniture",
+    "Interesting ways to turn everyday walks into adventures",
+    "Unique ideas for unconventional book clubs",
+    "Inventive ways to use plants as home decor",
+    "Creative ways to turn your home into a jungle station",
+    "Inventive ideas for personalized gifts on a budget",
+    "Themed dining experiences to try at your next dinner party",
+    "Unusual, yet delicious food pairings you need to try",
+    "Inventive strategies for teaching kids about personal finance",
+    "Unique ways to turn clutter into art installations",
+    "Creative ideas for preserving and displaying family memories",
+    "Exciting theme ideas for your next game night",
+    "Unique ways to turn old technology into modern marvels",
+    "Inventive ways to turn neighborhood walks into treasure hunts",
+    "Creative methods of transforming your home into a wellness retreat",
+    "Unique recipe ideas using only five ingredients or less",
+    "Interesting ways to build a time capsule",
+    "Inventive ideas for organizing a virtual book club",
+    "Creative ways to capture the honesty of human existence in writing",
+    "Unconventional work settings that connect us to humanity",
+    "Unique ways to explore themes of love, loss, and survival",
+    "Ideas for finding beauty in the mundane aspects of life",
+    "Improvised art techniques to capture the grit and grace of life",
+    "Ways to pen down the stark realities about the human condition",
+    "Concepts for stand-up comedy inspired by a self-deprecating life view",
+    "Creative drinks that reflect different moods and stages of life",
+    "Straightforward writing challenges for more candid storytelling",
+    "Precious life lessons from seemingly insignificant moments",
+    "Daily practices to stimulate straight-shooting honesty in writing",
+    "Creative ways to engage with the unconscious mind",
+    "Creating art as a form of self exploration and self therapy",
+    "Creative approaches to boost self awareness and personal growth",
+    "Unique activities for balancing the masculine and feminine aspects within us"]
