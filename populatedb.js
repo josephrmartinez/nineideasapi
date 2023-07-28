@@ -1,4 +1,6 @@
 #! /usr/bin/env node
+const bcrypt = require('bcryptjs');
+
 
 console.log(
     'This script populates your database. Specified database as argument - e.g.: node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.lz91hw2.mongodb.net/local_library?retryWrites=true&w=majority"'
@@ -7,12 +9,9 @@ console.log(
   // Get arguments passed on command line
   const userArgs = process.argv.slice(2);
 
-  const Comment = require("./models/comment");
-  const List = require("./models/list");
   const Topic = require("./models/topic");
   const User = require("./models/user");
 
-  const lists = []
   const topics = []
   const users = []
   
@@ -30,7 +29,7 @@ console.log(
     console.log("Debug: Should be connected?");
     await createUsers();
     // await createLists();
-    await createTopics(topicsArray);
+    // await createTopics(topicsArray);
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
   }
@@ -53,29 +52,63 @@ console.log(
   }
   
 
-  async function userCreate(username, password, email, bio) {
+
+// Function to create a new user
+async function userCreate(userDetails) {
+    const { username, password, email, bio } = userDetails;
+    const hashedPassword = await bcrypt.hash(password, 10);
+  
     const newUser = new User({ 
-        username,
-        password,
-        email,
-        bio
-     });
+      username,
+      password: hashedPassword,
+      email,
+      bio
+    });
     await newUser.save();
-    users.push(newUser);
-    console.log(`User topic: ${username}`);
+    console.log(`User created: ${username}`);
+    return newUser;
   }
   
-  
+  // Function to create multiple users at once
   async function createUsers() {
     console.log("Adding users");
-    await Promise.all([
-        userCreate("josephm", "mango", "joseph.r.martinez@gmail.com", "josephm.dev"),
-        userCreate("peterg", "mango", "peterg@gmail.com", "thinking about moving to michigan"),
-        userCreate("sashan", "mango", "sashan@gmail.com", "writing a book"),
-        userCreate("timo", "mango", "timo@gmail.com", "timo.ai"),
-        userCreate("mahmoudh", "mango", "mahmoudh@gmail.com", "open to book suggestions"),
-    ]);
+    const usersData = [
+      {
+        username: "josephm",
+        password: "mango",
+        email: "joseph.r.martinez@gmail.com",
+        bio: "josephm.dev"
+      },
+      {
+        username: "peterg",
+        password: "mango",
+        email: "peterg@gmail.com",
+        bio: "thinking about moving to michigan"
+      },
+      {
+        username: "sashan",
+        password: "mango",
+        email: "sashan@gmail.com",
+        bio: "writing a book"
+      },
+      {
+        username: "timo",
+        password: "mango",
+        email: "timo@gmail.com",
+        bio: "timo.ai"
+      },
+      {
+        username: "mahmoudh",
+        password: "mango",
+        email: "mahmoudh@gmail.com",
+        bio: "open to book suggestions"
+      }
+    ];
+  
+    const createPromises = usersData.map(userCreate);
+    await Promise.all(createPromises);
   }
+  
 
 
 const topicsArray = 
