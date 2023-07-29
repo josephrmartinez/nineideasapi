@@ -2,7 +2,7 @@
   "name": "nineideasapi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "serverstart": "nodemon server.js"
   },
