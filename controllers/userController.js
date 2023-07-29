@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/user');
 const passport = require("passport");
-
+const bcrypt = require('bcryptjs');
 
 const userController = {
   registerUser: asyncHandler(async (req, res) => {
@@ -20,19 +20,23 @@ const userController = {
         }
       })
     }),
-  loginUser: asyncHandler(async (req, res) => {
-    passport.authenticate("local", {
-            successRedirect: "/",
-            failureRedirect: "/"
-        })
-      }),
-      // RESPOND WITH USER DETAILS: res.status(201).json(user) how???
-    // Implement logic to verify user credentials and log them in
-    // Example: Check if the provided email and password match an existing user
-    // Example: const user = await User.findOne({ email: req.body.email });
-    // Example: if (!user || !user.comparePassword(req.body.password)) { /* Handle invalid login */ }
-    // Respond with the logged-in user details
-    // Example: res.json(user);
+    loginUser: (req, res, next) => {
+      passport.authenticate("local", (err, user, info) => {
+        if (err) {
+          return next(err);
+        }
+        if (!user) {
+          return res.status(401).json({ message: "Incorrect username or password" });
+        }
+        req.logIn(user, (err) => {
+          if (err) {
+            return next(err);
+          }
+          return res.json(user); // or redirect to a success page if needed
+        });
+      })(req, res, next);
+    },
+      
   
 
   logoutUser: asyncHandler(async (req, res) => {
@@ -67,3 +71,14 @@ const userController = {
 };
 
 module.exports = userController;
+
+
+
+
+// RESPOND WITH USER DETAILS: res.status(201).json(user) how???
+    // Implement logic to verify user credentials and log them in
+    // Example: Check if the provided email and password match an existing user
+    // Example: const user = await User.findOne({ email: req.body.email });
+    // Example: if (!user || !user.comparePassword(req.body.password)) { /* Handle invalid login */ }
+    // Respond with the logged-in user details
+    // Example: res.json(user);

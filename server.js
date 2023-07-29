@@ -4,7 +4,10 @@ const app = express()
 const mongoose = require('mongoose');
 const session = require("express-session");
 const cors = require('cors');
-const User = require('/models/user')
+const User = require('./models/user')
+const passport = require("passport");
+const bcrypt = require('bcryptjs');
+const LocalStrategy = require("passport-local").Strategy;
 
 // connect to MongoDB
 mongoose.set('strictQuery', false);
@@ -75,12 +78,15 @@ app.use('/api/users', userRoutes);
 app.use('/api/lists', listRoutes);
 app.use('/api/topic', topicRoutes)
 
+app.listen(3000, ()=> console.log("server started!"))
+
+
+
+
 // Serve the static files from the React app ???
-app.use(express.static(path.join(__dirname, '../nineideas-app/build')));
+// app.use(express.static(path.join(__dirname, '../nineideas-app/build')));
 
 // If no API routes match, serve the React app ???
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../nineideas-app/build', 'index.html'));
-});
-
-app.listen(3000, ()=> console.log("server started!"))
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../nineideas-app/build', 'index.html'));
+// });
