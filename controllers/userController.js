@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/user');
+const List = require('../models/list')
 const passport = require("passport");
 const bcrypt = require('bcryptjs');
 
@@ -66,6 +67,21 @@ const userController = {
     // Respond with a success message
     res.json({ message: 'User deleted successfully' });
   }),
+
+  getListsByUserId: asyncHandler(async (req, res) => {
+    try {
+      const userid = req.params.userid; // Extract userid from URL params
+      const userLists = await List.find({ author: userid })
+      .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
+      .limit(20) // Limit the result to 20 documents
+      .exec();
+      // Respond with the lists data
+      res.json(userLists);
+    } catch (error) {
+      res.status(500).json({error: "An error occured while fetching lists"})
+    }
+  }),
+
 };
 
 module.exports = userController;
