@@ -71,7 +71,7 @@ const userController = {
   getListsByUserId: asyncHandler(async (req, res) => {
     try {
       const userid = req.params.userid; // Extract userid from URL params
-      const userLists = await List.find({ author: userid })
+      const userLists = await List.find({ author: userid, status: 'published', visibility: 'public' })
       .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
       .limit(20) // Limit the result to 20 documents
       .exec();
@@ -79,6 +79,30 @@ const userController = {
       res.json(userLists);
     } catch (error) {
       res.status(500).json({error: "An error occured while fetching lists"})
+    }
+  }),
+
+  getListsByCurrentUser: asyncHandler(async (req, res) => {
+    try {
+      // Check if the user is authenticated and available in req.user
+      if (!req.user) {
+        // If the user is not authenticated, respond with an error message
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+  
+      const currentUserID = req.user._id; // Get the current user's ID from req.user
+  
+      // Implement logic to fetch lists attributed to the currently signed-in user
+      const userLists = await List.find({ author: currentUserID })
+        .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
+        .limit(20) // Limit the result to 20 documents
+        .exec();
+  
+      // Respond with the lists data
+      res.json(userLists);
+    } catch (error) {
+      // Handle any errors that occur during the database query or processing
+      res.status(500).json({ error: 'An error occurred while fetching lists' });
     }
   }),
 
