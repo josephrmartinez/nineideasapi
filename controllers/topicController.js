@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Topic = require('../models/topic');
-const User = require('..models/user');
+const User = require('../models/user');
 
 const topicController = {
   createTopic: asyncHandler(async (req, res) => {
@@ -43,10 +43,9 @@ const topicController = {
         const user = await User.findById(currentUserID).populate('lists');
         completedListTopics = user.lists.map((list) => list.topic);
       }
-  
       // Fetch a random topic that the user has not already written a list on
-      const newTopic = await List.aggregate([
-        { $match: { topic: { $nin: completedListTopics } } },
+      const newTopic = await Topic.aggregate([
+        { $match: { name: { $nin: completedListTopics } } },
         { $sample: { size: 1 } },
       ]);
   
@@ -59,7 +58,7 @@ const topicController = {
       res.json(newTopic[0]);
     } catch (error) {
       // Handle any errors that occur during the database query or processing
-      res.status(500).json({ error: 'An error occurred while fetching a new topic' });
+      res.status(500).json({ error: error.message });
     }
   })
 }
