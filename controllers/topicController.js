@@ -35,11 +35,14 @@ const topicController = {
 
   getNewTopic: asyncHandler(async (req, res) => {
     try {
-      const currentUserID = req.user._id; // Assuming the authenticated user ID is available in req.user
+      let completedListTopics = [];
   
-      // Get the lists already completed by the user from the User model
-      const user = await User.findById(currentUserID).populate('lists');
-      const completedListTopics = user.lists.map((list) => list.topic);
+      // Check if the user is authenticated and get the completedListTopics
+      if (req.user) {
+        const currentUserID = req.user._id;
+        const user = await User.findById(currentUserID).populate('lists');
+        completedListTopics = user.lists.map((list) => list.topic);
+      }
   
       // Fetch a random topic that the user has not already written a list on
       const newTopic = await List.aggregate([
@@ -58,7 +61,7 @@ const topicController = {
       // Handle any errors that occur during the database query or processing
       res.status(500).json({ error: 'An error occurred while fetching a new topic' });
     }
-  }),
-};
+  })
+}
 
 module.exports = topicController;
