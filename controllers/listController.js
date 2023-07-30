@@ -13,14 +13,23 @@ const listController = {
       res.status(201).json(newList);
   }),
 
+
   getAllLists: asyncHandler(async (req, res) => {
-    // Implement logic to fetch all published lists
-    const lists = await List.find({ status: 'published' })
-    .populate("author")
-    .exec();
-    // LIMIT TO 20 LISTS, IMPLEMENT PAGINATION
-    res.json(lists);
+    try {
+      // Implement logic to fetch all published lists with visibility set to "public"
+      const lists = await List.find({ status: 'published', visibility: 'public' })
+        .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
+        .limit(20) // Limit the result to 20 documents
+        .populate("author")
+        .exec();
+      // Respond with the lists data
+      res.json(lists);
+    } catch (error) {
+      // Handle any errors that occur during the database query or processing
+      res.status(500).json({ error: 'An error occurred while fetching lists' });
+    }
   }),
+
 
   getListById: asyncHandler(async (req, res) => {
     // Implement logic to find and return a list by ID

@@ -39,15 +39,13 @@ const userController = {
       
   
 
-  logoutUser: asyncHandler(async (req, res) => {
-    req.logout(function (err) {
-            if (err) {
-            return next(err);
-            }
-            res.redirect("/");
-            // res.json???
-      })
-  }),
+  logoutUser: (req, res) => {
+    // Implement logic to log the user out using req.logout()
+    req.logout();
+    
+    // Respond with the user details after successful logout
+    res.status(200).json({ message: "User logged out successfully", user: req.user });
+  },
 
 
   getUserById: asyncHandler(async (req, res) => {
