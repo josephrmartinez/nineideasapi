@@ -3,6 +3,10 @@ const User = require('../models/user');
 const List = require('../models/list')
 const passport = require("passport");
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
+
+
 
 const userController = {
   registerUser: asyncHandler(async (req, res) => {
@@ -21,27 +25,33 @@ const userController = {
         }
       })
     }),
-    loginUser: (req, res, next) => {
-      passport.authenticate("local", (err, user, info) => {
-        if (err) {
-          return next(err);
-        }
-        if (!user) {
-          return res.status(401).json({ message: "Incorrect username or password" });
-        }
-        req.logIn(user, (err) => {
-          if (err) {
-            return next(err);
-          }
-          return res.json(user); // or redirect to a success page if needed
-        });
-      })(req, res, next);
-    },
+    loginUser: asyncHandler(async (req, res, next) => {
+      const { username, password } = req.body;
+  
+      // Validate user credentials (usually against a user store like a database)
+      const user = await User.findOne({ username });
+  
+      if (!user) {
+        return res.status(401).json({ message: "Incorrect username or password" });
+      }
+  
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Incorrect username or password" });
+      }
+  
+      // If the credentials are valid, create a JWT token
+      const token = jwt.sign({ userId: user._id, username: user.username }, process.env.ACCESS_TOKEN);
+  
+      // Return the token to the client
+      res.json({ accessToken: token });
+    }),
       
   
 
   logoutUser: (req, res) => {
     // Implement logic to log the user out using req.logout()
+    // THIS DOES NOTHING FOR JWT
     req.logout();
     
     // Respond with the user details after successful logout
