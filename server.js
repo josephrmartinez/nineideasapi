@@ -2,12 +2,11 @@ const express = require("express")
 require('dotenv').config()
 const app = express()
 const mongoose = require('mongoose');
-const session = require("express-session");
 const cors = require('cors');
 const User = require('./models/user')
-const passport = require("passport");
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const LocalStrategy = require("passport-local").Strategy;
+const cookieParser = require('cookie-parser');
 
 // connect to MongoDB
 mongoose.set('strictQuery', false);
@@ -17,57 +16,31 @@ async function main() {
   await mongoose.connect(mongoDB);
 }
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Replace with your frontend URL
+  credentials: true, // Allow cookies to be sent with requests
+}));
 app.use(express.json())
-// Configure express-session
-app.use(session({ secret: "mango", resave: false, saveUninitialized: true }));
-
-passport.use(
-    // LocalStrategy is the common username-password strategy for auth
-    new LocalStrategy(async(username, password, done) => {
-      try {
-        const user = await User.findOne({ username: username });
-        if (!user) {
-          return done(null, false, { message: "Incorrect username" });
-        };
-        bcrypt.compare(password, user.password, (err, res)=> {
-            if (res){
-                // passwords match, log user in
-                return done(null, user)
-            } else {
-                // passwords to not match
-                return done(null, false, {message: "Incorrect Password"})
-            }
-        })
-      } catch(err) {
-        return done(err);
-      };
-    })
-  );
-
-  passport.serializeUser(function(user, done) {
-    done(null, user.id);
-  });
-  
-  passport.deserializeUser(async function(id, done) {
-    try {
-      const user = await User.findById(id);
-      done(null, user);
-    } catch(err) {
-      done(err);
-    };
-  });
-
-
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
 
-// CHECK Middleware function to access currentUser variable in all views
-app.use(function(req, res, next){
-    res.locals.currentUser = req.user;
-    next();
-})
+// CURRENTLY NOT BEING USED
+// Middleware to verify JWT token and set the current user (if authenticated)
+const authenticateUser = (req, res, next) => {
+  const token = req.cookies.accessToken; // Read the accessToken from cookies
+
+  if (token) {
+    try {
+      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      req.user = decodedToken;
+    } catch (error) {
+      // Invalid token or expired token - do nothing, proceed without setting req.user
+    }
+  }
+
+  // Continue to the next middleware or route handler
+  next();
+};
 
 // Import and use the routes
 const userRoutes = require('./routes/userRoutes');
@@ -79,14 +52,3 @@ app.use('/api/lists', listRoutes);
 app.use('/api/topic', topicRoutes)
 
 app.listen(3000, ()=> console.log("server started!"))
-
-
-
-
-// Serve the static files from the React app ???
-// app.use(express.static(path.join(__dirname, '../nineideas-app/build')));
-
-// If no API routes match, serve the React app ???
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../nineideas-app/build', 'index.html'));
-// });

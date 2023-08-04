@@ -1,7 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/user');
 const List = require('../models/list')
-const passport = require("passport");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
@@ -44,7 +43,9 @@ const userController = {
       const token = jwt.sign({ userId: user._id, username: user.username }, process.env.ACCESS_TOKEN);
   
       // Return the token to the client
-      res.json({ accessToken: token });
+      res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
+      console.log(res.getHeaders())
+      res.json({ success: true });
     }),
       
   
