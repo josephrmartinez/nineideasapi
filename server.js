@@ -24,17 +24,24 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
 
-// CURRENTLY NOT BEING USED
+// CURENTLY NOT BEING USED
 // Middleware to verify JWT token and set the current user (if authenticated)
 const authenticateUser = (req, res, next) => {
   const token = req.cookies.accessToken; // Read the accessToken from cookies
-
+  console.log(token)
   if (token) {
     try {
       const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
       req.user = decodedToken;
+      console.log('User authenticated. Decoded token:', decodedToken);
     } catch (error) {
-      // Invalid token or expired token - do nothing, proceed without setting req.user
+      if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+        // Invalid token or expired token
+        return res.status(401).json({ error: 'Invalid or expired token.' });
+      } else {
+        // Other unexpected errors
+        return res.status(500).json({ error: 'Internal server error.' });
+      }
     }
   }
 
@@ -47,8 +54,8 @@ const userRoutes = require('./routes/userRoutes');
 const listRoutes = require('./routes/listRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 
-app.use('/api/users', userRoutes);
-app.use('/api/lists', listRoutes);
-app.use('/api/topic', topicRoutes)
+app.use('/api/users',  userRoutes);
+app.use('/api/lists', authenticateUser, listRoutes);
+app.use('/api/topic',  topicRoutes)
 
 app.listen(3000, ()=> console.log("server started!"))

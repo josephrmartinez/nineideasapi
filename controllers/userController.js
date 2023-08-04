@@ -43,9 +43,9 @@ const userController = {
       const token = jwt.sign({ userId: user._id, username: user.username }, process.env.ACCESS_TOKEN);
   
       // Return the token to the client
-      res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
+      res.cookie('accessToken', token, { httpOnly: false, sameSite: 'lax' });
       console.log(res.getHeaders())
-      res.json({ success: true });
+      res.json({ success: true, token: token });
     }),
       
   
