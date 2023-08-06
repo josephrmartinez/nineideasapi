@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 const { DateTime } = require("luxon")
 
 const ListSchema = new Schema({
-  topic: { type: String },
-  ideas: [{ type: String }],
+  topic: { type: String }, // type: Schema.Types.ObjectId, ref: "Topic"
+  ideas: [{ type: String }], // type: Schema.Types.ObjectId, ref: "List"
   dateAdded: { type: Date, default: Date.now },
   timeStarted: { type: Date, default: Date.now },
   timeCompleted: {type: Date },

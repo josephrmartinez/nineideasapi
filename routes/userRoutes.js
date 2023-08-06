@@ -8,8 +8,8 @@ router.post('/', userController.registerUser);
 // User login
 router.post('/login', userController.loginUser);
 
-// Get lists by the current user
-router.get('/current/lists', userController.getListsByCurrentUser);
+// // Get lists by the current user
+// router.get('/current/lists', userController.getListsByCurrentUser);
 
 // Get lists by a specific user
 router.get('/:userid/lists', userController.getListsByUserId);

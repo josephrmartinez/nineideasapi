@@ -31,7 +31,7 @@ const authenticateUser = (req, res, next) => {
   console.log(token)
   if (token) {
     try {
-      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);
       req.user = decodedToken;
       console.log('User authenticated. Decoded token:', decodedToken);
     } catch (error) {
@@ -55,7 +55,7 @@ const listRoutes = require('./routes/listRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 
 app.use('/api/users',  userRoutes);
-app.use('/api/lists', authenticateUser, listRoutes);
+app.use('/api/lists', listRoutes);
 app.use('/api/topic',  topicRoutes)
 
 app.listen(3000, ()=> console.log("server started!"))

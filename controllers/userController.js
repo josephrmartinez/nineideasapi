@@ -60,10 +60,23 @@ const userController = {
   },
 
 
+
   getUserById: asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id)
-    res.json(user)
+    try {
+      const user = await User.findById(req.params.userid);
+      if (!user) {
+        // If user is not found, return a 404 Not Found response
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      // If there's any error during the operation, return a 500 Internal Server Error response
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   }),
+  
+  
 
   updateUser: asyncHandler(async (req, res) => {
     // Implement logic to update the user details based on the request data
@@ -81,6 +94,7 @@ const userController = {
 
   getListsByUserId: asyncHandler(async (req, res) => {
     try {
+      // Add logic to determine current user and permissions... viewing own lists or public lists...
       const userid = req.params.userid; // Extract userid from URL params
       const userLists = await List.find({ author: userid, status: 'published', visibility: 'public' })
       .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
