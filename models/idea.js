@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const IdeaSchema = new Schema({
-  text: { type: String, required: true, unique: true },
+  text: { type: String },
   parentList: { type: Schema.Types.ObjectId, ref: "List", required: true },
 
 });
