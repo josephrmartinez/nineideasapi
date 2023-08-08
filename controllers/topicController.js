@@ -56,6 +56,7 @@ const topicController = {
   
       // Respond with the random new topic
       res.json(newTopic[0]);
+      
     } catch (error) {
       // Handle any errors that occur during the database query or processing
       res.status(500).json({ error: error.message });

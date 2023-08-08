@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const IdeaSchema = new Schema({
   text: { type: String },
   parentList: { type: Schema.Types.ObjectId, ref: "List", required: true },
-
+  parentTopic: { type: Schema.Types.ObjectId, ref: "Topic", required: true },
 });
 
 
