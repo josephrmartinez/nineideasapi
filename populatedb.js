@@ -10,10 +10,10 @@ console.log(
   const userArgs = process.argv.slice(2);
 
   const Topic = require("./models/topic");
-  const User = require("./models/user");
+  // const User = require("./models/user");
 
   const topics = []
-  const users = []
+  // const users = []
   
   
   const mongoose = require("mongoose");
@@ -27,9 +27,9 @@ console.log(
     console.log("Debug: About to connect");
     await mongoose.connect(mongoDB);
     console.log("Debug: Should be connected?");
-    await createUsers();
+    // await createUsers();
     // await createLists();
-    // await createTopics(topicsArray);
+    await createTopics(topicsArray);
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
   }
@@ -37,7 +37,7 @@ console.log(
   async function createTopics(topicsArray) {
     try {
       const topicPromises = topicsArray.map(async (name) => {
-        const topic = new Topic({ name });
+        const topic = new Topic({ name: name });
         await topic.save();
         return topic;
       });
@@ -193,7 +193,7 @@ const topicsArray =
     "Creative ways to give back to your community",
     "The most pressing issues facing your community",
     "Unconventional ways to entertain yourself",
-    "What makes a fulfilling and meaningful life?",
+    "What makes a fulfilling and meaningful life",
     "Meetup groups that I would start or join",
     "Unconventional ways to make friends",
     "Specific ways to foster a happy and healthy relationship",
@@ -203,6 +203,7 @@ const topicsArray =
     "Things that give me hope",
     "Things I would do in a lucid dream.",
     "What I would do with $100,000,000",
+    "How to give away $100,000",
     "Ways to connect with nature that will leave you feeling refreshed and rejuvenated",
     "Acts of kindness that will make a positive impact on the lives of others",
     "Good habits to form",
@@ -210,14 +211,13 @@ const topicsArray =
     "Relationship advice to build and maintain healthy relationships",
     "Travel experiences that will broaden your horizons and change your perspective on the world",
     "Ways to make a difference in the world and leave it a better place", 
-    "The meaning of life: What are some options for the purpose of life?",
-    "What does it mean for us if God does exist?",
-    "What could the future of education look like?",
-    "What could the future of healthcare look like?",
-    "What could the future of transportation look like?",
-    "What will the future of food look like?",
-    "What will the future of war look like?",
-    "What will the future of the human race look like?",
+    "Some options for the purpose of life",
+    "The future of education",
+    "The future of healthcare",
+    "The future of transportation",
+    "The future of food",
+    "The future of war",
+    "The future of the human race",
     "Innovative ways to utilize space in a tiny home",
     "Artsy ideas for turning junk into jewellery",
     "Methods for turning found objects into functional pieces of furniture",
