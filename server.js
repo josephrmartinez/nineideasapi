@@ -24,7 +24,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
 
-// CURENTLY NOT BEING USED
+
 // Middleware to verify JWT token and set the current user (if authenticated)
 const authenticateUser = (req, res, next) => {
   const token = req.cookies.accessToken; // Read the accessToken from cookies
@@ -32,7 +32,7 @@ const authenticateUser = (req, res, next) => {
   if (token) {
     try {
       const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);
-      req.user = decodedToken;
+      req.user = decodedToken.userId;
       console.log('User authenticated. Decoded token:', decodedToken);
     } catch (error) {
       if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
@@ -53,9 +53,11 @@ const authenticateUser = (req, res, next) => {
 const userRoutes = require('./routes/userRoutes');
 const listRoutes = require('./routes/listRoutes');
 const topicRoutes = require('./routes/topicRoutes');
+const ideaRoutes = require('./routes/ideaRoutes')
 
 app.use('/api/users',  userRoutes);
-app.use('/api/lists', listRoutes);
+app.use('/api/lists', authenticateUser, listRoutes);
 app.use('/api/topic',  topicRoutes)
+app.use('/api/idea', ideaRoutes)
 
 app.listen(3000, ()=> console.log("server started!"))

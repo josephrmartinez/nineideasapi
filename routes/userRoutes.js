@@ -12,15 +12,15 @@ router.post('/login', userController.loginUser);
 // router.get('/current/lists', userController.getListsByCurrentUser);
 
 // Get lists by a specific user
-router.get('/:userid/lists', userController.getListsByUserId);
+router.get('/:id/lists', userController.getListsByUserId);
 
 // Get user by user ID
-router.get('/:userid', userController.getUserById);
+router.get('/:id', userController.getUserById);
 
 // Update user by user ID
-router.put('/:userid', userController.updateUser);
+router.put('/:id', userController.updateUser);
 
 // Delete user by user ID
-router.delete('/:userid', userController.deleteUser);
+router.delete('/:id', userController.deleteUser);
 
 module.exports = router;

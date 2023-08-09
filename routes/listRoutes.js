@@ -6,13 +6,13 @@ const commentController = require('../controllers/commentController');
 // Define the API routes related to lists
 router.get('/', listController.getAllLists);
 router.post('/', listController.createList);
-router.get('/:listid', listController.getListById);
-router.put('/:listid', listController.updateList);
-router.delete('/:listid', listController.deleteList);
-router.get('/:listid/comments', commentController.getCommentsForList)
-router.post('/:listid/comments', commentController.createComment)
-router.put('/:listid/comments', commentController.updateComment)
-router.delete('/:listid/comments', commentController.deleteComment)
+router.get('/:id', listController.getListById);
+router.put('/:id', listController.updateList);
+router.delete('/:id', listController.deleteList);
+router.get('/:id/comments', commentController.getCommentsForList)
+router.post('/:id/comments', commentController.createComment)
+router.put('/:id/comments', commentController.updateComment)
+router.delete('/:id/comments', commentController.deleteComment)
 
 
 // More list-related routes if needed...

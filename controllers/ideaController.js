@@ -1,13 +1,11 @@
 const asyncHandler = require('express-async-handler');
-const Topic = require('../models/topic');
-const User = require('../models/user');
+const Idea = require('../models/idea');
 
 const ideaController = {
   createIdea: asyncHandler(async (req, res) => {
     // Implement logic to create a new topic based on the request data
     const newIdea = new Idea({ 
         text: req.body.text,
-        parentList: req.body.parentList,
         parentTopic: req.body.parentTopic });
     // Save the new topic to the database
     await newIdea.save();
