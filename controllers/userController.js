@@ -63,7 +63,7 @@ const userController = {
 
   getUserById: asyncHandler(async (req, res) => {
     try {
-      const user = await User.findById(req.params.userid);
+      const user = await User.findById(req.params.id);
       if (!user) {
         // If user is not found, return a 404 Not Found response
         return res.status(404).json({ error: 'User not found' });
