@@ -45,6 +45,30 @@ const listController = {
     res.json(updatedList);
   }),
 
+  patchUpdateList: asyncHandler(async (req, res) => {
+    try {
+      // Find the list by ID
+      const list = await List.findById(req.params.id);
+  
+      if (!list) {
+        return res.status(404).json({ error: 'List not found' });
+      }
+  
+      // Apply partial updates from the request body to the list
+      Object.assign(list, req.body);
+  
+      // Save the updated list
+      const updatedList = await list.save();
+  
+      // Respond with the updated list details
+      res.json(updatedList);
+    } catch (error) {
+      console.error('Error updating list:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }),
+  
+
   deleteList: asyncHandler(async (req, res) => {
     // Implement logic to delete the list by ID
     await List.findByIdAndDelete(req.params.id);

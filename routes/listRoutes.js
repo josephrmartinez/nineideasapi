@@ -8,6 +8,7 @@ router.get('/', listController.getAllLists);
 router.post('/', listController.createList);
 router.get('/:id', listController.getListById);
 router.put('/:id', listController.updateList);
+router.patch('/:id', listController.patchUpdateList);
 router.delete('/:id', listController.deleteList);
 router.get('/:id/comments', commentController.getCommentsForList)
 router.post('/:id/comments', commentController.createComment)

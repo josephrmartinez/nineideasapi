@@ -85,6 +85,29 @@ const userController = {
     res.json(updatedUser);
   }),
 
+  patchUpdateUser: asyncHandler(async (req, res) => {
+    try {
+      // Find the USER by ID
+      const user = await User.findById(req.params.id);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Apply partial updates from the request body to the list
+      Object.assign(user, req.body);
+  
+      // Save the updated list
+      const updatedUser = await user.save();
+  
+      // Respond with the updated list details
+      res.json(updatedUser);
+    } catch (error) {
+      console.error('Error updating user:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }),
+
   deleteUser: asyncHandler(async (req, res) => {
     // Implement logic to delete the user by ID
     await User.findByIdAndDelete(req.params.id);

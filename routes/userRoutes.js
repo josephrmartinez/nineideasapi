@@ -20,6 +20,8 @@ router.get('/:id', userController.getUserById);
 // Update user by user ID
 router.put('/:id', userController.updateUser);
 
+router.patch('/:id', userController.patchUpdateUser)
+
 // Delete user by user ID
 router.delete('/:id', userController.deleteUser);
 
