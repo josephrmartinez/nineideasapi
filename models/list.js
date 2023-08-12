@@ -10,8 +10,7 @@ const ListSchema = new Schema({
   author: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  status: { type: String, enum: ['draft', 'complete'], default: 'draft' },
-  visibility: { type: String, enum: ['private', 'public'], default: 'private' },
+  status: { type: String, enum: ['draft', 'private', 'public'], default: 'draft' },
 });
 
 ListSchema.virtual("timeStarted_formatted").get(function(){

@@ -44,7 +44,7 @@ const userController = {
   
       // Return the token to the client
       res.cookie('accessToken', token, { httpOnly: false, sameSite: 'lax' });
-      console.log(res.getHeaders())
+      // console.log(res.getHeaders())
       res.json({ success: true, token: token });
     }),
       
@@ -63,11 +63,23 @@ const userController = {
 
   getUserById: asyncHandler(async (req, res) => {
     try {
-      const user = await User.findById(req.params.id);
+      const user = await User.findById(req.params.id)
+        .populate({
+          path: 'lists',
+          populate: [
+            { path: 'topic', select: 'name' },
+            { path: 'comments', select: '_id' },
+            { path: 'likes', select: '_id' }
+          ],
+          select: 'status comments likes topic'
+        })
+        .exec();
+  
       if (!user) {
         // If user is not found, return a 404 Not Found response
         return res.status(404).json({ error: 'User not found' });
       }
+  
       res.json(user);
     } catch (error) {
       // If there's any error during the operation, return a 500 Internal Server Error response
@@ -75,6 +87,7 @@ const userController = {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }),
+  
   
   
 
