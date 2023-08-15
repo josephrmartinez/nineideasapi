@@ -8,7 +8,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true, minLength: 3 },
   createdAt: { type: Date, default: Date.now },
   bio: { type: String, maxLength: 30 },
-  lists: [{ type: Schema.Types.ObjectId, ref: "List" }]
+  lists: [{ type: Schema.Types.ObjectId, ref: "List", unique: true }]
 });
 
 UserSchema.virtual("totallists").get(function () {

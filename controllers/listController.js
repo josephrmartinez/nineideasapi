@@ -17,10 +17,11 @@ const listController = {
   getAllLists: asyncHandler(async (req, res) => {
     try {
       // Implement logic to fetch all published lists with visibility set to "public"
-      const lists = await List.find({ status: 'published', visibility: 'public' })
-        .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
+      const lists = await List.find({ status: 'public' })
+        .sort({ timeCompleted: -1 }) // Sort by dateAdded in descending order
         .limit(20) // Limit the result to 20 documents
-        .populate("author")
+        .populate({path: "author", select: "username"})
+        .populate({path: "topic", select: "name"})
         .exec();
       // Respond with the lists data
       res.json(lists);
@@ -33,7 +34,12 @@ const listController = {
 
   getListById: asyncHandler(async (req, res) => {
     // Implement logic to find and return a list by ID
-    const list = await List.findById(req.params.id);
+    const list = await List.findById(req.params.id)
+      .populate({path: "author", select: "username"})
+      .populate({path: "topic", select: "name"})
+      .populate("comments")
+      .populate("ideas")
+      .exec();
     // Respond with the list details
     res.json(list);
   }),
