@@ -80,7 +80,22 @@ const userController = {
         return res.status(404).json({ error: 'User not found' });
       }
   
-      res.json(user);
+      const { _id, username, email, createdAt, bio, lists, currentStreak, completedLists, recordStreak } = user;
+
+    // Create a response object with user data and the current streak
+    const response = {
+      _id,
+      username,
+      email,
+      createdAt,
+      bio,
+      lists,
+      currentStreak,
+      completedLists, 
+      recordStreak
+    };
+    
+    res.json(response);
     } catch (error) {
       // If there's any error during the operation, return a 500 Internal Server Error response
       console.error('Error:', error);
