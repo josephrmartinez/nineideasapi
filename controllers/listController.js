@@ -14,6 +14,7 @@ const listController = {
   }),
 
 
+  // UPDATE THIS FUNCTION TO USE COMPLETED - TRUE, VISIBLE - TRUE
   getAllLists: asyncHandler(async (req, res) => {
     try {
       // Implement logic to fetch all published lists with visibility set to "public"

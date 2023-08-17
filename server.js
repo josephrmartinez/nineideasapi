@@ -55,7 +55,7 @@ const listRoutes = require('./routes/listRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const ideaRoutes = require('./routes/ideaRoutes')
 
-app.use('/api/users',  userRoutes);
+app.use('/api/users', authenticateUser, userRoutes);
 app.use('/api/lists', authenticateUser, listRoutes);
 app.use('/api/topic',  topicRoutes)
 app.use('/api/idea', ideaRoutes)

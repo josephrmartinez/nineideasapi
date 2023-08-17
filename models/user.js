@@ -34,7 +34,7 @@ UserSchema.virtual("currentStreak").get(function () {
     return count;
   }
 
-  const completedLists = this.lists.filter(list => list.status !== "draft");
+  const completedLists = this.lists.filter(list => list.completed);
 
   completedLists.sort((a, b) => {
     const dateA = new Date(a.timeCompleted);
@@ -77,7 +77,7 @@ UserSchema.virtual("recordStreak").get(function () {
     return maxStreak;
   }
 
-  const completedLists = this.lists.filter(list => list.status !== "draft");
+  const completedLists = this.lists.filter(list => list.completed);
 
   completedLists.sort((a, b) => {
     const dateA = new Date(a.dateAdded);
@@ -89,8 +89,6 @@ UserSchema.virtual("recordStreak").get(function () {
 
   return streak;
 });
-
-
 
 
 // Export model
