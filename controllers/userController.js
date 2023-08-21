@@ -63,6 +63,8 @@ const userController = {
 
   getUserById: asyncHandler(async (req, res) => {
     try {
+      
+
       const user = await User.findById(req.params.id)
         .populate({
           path: 'lists',
@@ -71,7 +73,7 @@ const userController = {
             { path: 'comments', select: '_id' },
             { path: 'likes', select: '_id' }
           ],
-          select: 'status comments likes topic'
+          select: 'topic likes public completed comments'
         })
         .exec();
   
@@ -80,7 +82,17 @@ const userController = {
         return res.status(404).json({ error: 'User not found' });
       }
   
-      const { _id, username, email, createdAt, bio, lists, currentStreak, completedLists, recordStreak } = user;
+      const isAuthenticatedUser = req.user === req.params.id
+
+      // Filter lists based on visibility
+      const filteredLists = user.lists.map(list => {
+        if (isAuthenticatedUser || list.public) {
+          return list;
+        }
+      });
+
+
+      const { _id, username, email, createdAt, bio, currentStreak, completedLists, recordStreak } = user;
 
     // Create a response object with user data and the current streak
     const response = {
@@ -89,11 +101,12 @@ const userController = {
       email,
       createdAt,
       bio,
-      lists,
+      lists: filteredLists,
       currentStreak,
       completedLists, 
       recordStreak
     };
+    
     
     res.json(response);
     } catch (error) {

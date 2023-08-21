@@ -14,11 +14,10 @@ const listController = {
   }),
 
 
-  // UPDATE THIS FUNCTION TO USE COMPLETED - TRUE, VISIBLE - TRUE
   getAllLists: asyncHandler(async (req, res) => {
     try {
       // Implement logic to fetch all published lists with visibility set to "public"
-      const lists = await List.find({ status: 'public' })
+      const lists = await List.find({ public: true })
         .sort({ timeCompleted: -1 }) // Sort by dateAdded in descending order
         .limit(20) // Limit the result to 20 documents
         .populate({path: "author", select: "username"})

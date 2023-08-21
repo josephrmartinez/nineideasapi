@@ -11,7 +11,7 @@ const ListSchema = new Schema({
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   completed: { type: Boolean, default: false },
-  visible: { type: Boolean, default: false }
+  public: { type: Boolean, default: false }
 });
 
 ListSchema.virtual("timeStarted_formatted").get(function(){
