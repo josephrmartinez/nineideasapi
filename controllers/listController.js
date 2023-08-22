@@ -76,10 +76,21 @@ const listController = {
   
 
   deleteList: asyncHandler(async (req, res) => {
-    // Implement logic to delete the list by ID
-    await List.findByIdAndDelete(req.params.id);
-    // Respond with a success message
-    res.json({ message: 'List deleted successfully' });
+    const list = await List.findById(req.params.id)
+      .populate("author")
+      .exec();
+
+    if (list) {
+      const authorId = list.author._id
+
+      // Implement logic to delete the list by ID
+      await List.findByIdAndDelete(req.params.id);
+      // Respond with a success message
+      res.json({ authorId });
+
+    }
+    
+    
   }),
 };
 

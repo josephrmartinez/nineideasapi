@@ -12,8 +12,11 @@ const UserSchema = new Schema({
 });
 
 UserSchema.virtual("completedLists").get(function () {
-  return this.lists.length;
+  const completedLists = this.lists.filter(list => list.completed);
+  return completedLists.length;
 });
+
+
 UserSchema.virtual("currentStreak").get(function () {
   function countConsecutiveDates(data) {
     if (data.length === 0) {
