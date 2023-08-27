@@ -28,7 +28,6 @@ app.use(cookieParser())
 // Middleware to verify JWT token and set the current user (if authenticated)
 const authenticateUser = (req, res, next) => {
   const token = req.cookies.accessToken; // Read the accessToken from cookies
-  console.log(token)
   if (token) {
     try {
       const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);

@@ -73,7 +73,7 @@ const userController = {
             { path: 'comments', select: '_id' },
             { path: 'likes', select: '_id' }
           ],
-          select: 'topic likes public completed comments'
+          select: 'topic likes public completed'
         })
         .exec();
   
