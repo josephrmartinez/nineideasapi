@@ -63,8 +63,6 @@ const userController = {
 
   getUserById: asyncHandler(async (req, res) => {
     try {
-      
-
       const user = await User.findById(req.params.id)
         .populate({
           path: 'lists',
@@ -115,16 +113,6 @@ const userController = {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }),
-  
-  
-  
-
-  updateUser: asyncHandler(async (req, res) => {
-    // Implement logic to update the user details based on the request data
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    // Respond with the updated user details
-    res.json(updatedUser);
-  }),
 
   patchUpdateUser: asyncHandler(async (req, res) => {
     try {
@@ -156,44 +144,6 @@ const userController = {
     res.json({ message: 'User deleted successfully' });
   }),
 
-  getListsByUserId: asyncHandler(async (req, res) => {
-    try {
-      // Add logic to determine current user and permissions... viewing own lists or public lists...
-      const userid = req.params.userid; // Extract userid from URL params
-      const userLists = await List.find({ author: userid, status: 'published', visibility: 'public' })
-      .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
-      .limit(20) // Limit the result to 20 documents
-      .exec();
-      // Respond with the lists data
-      res.json(userLists);
-    } catch (error) {
-      res.status(500).json({error: "An error occured while fetching lists"})
-    }
-  }),
-
-  getListsByCurrentUser: asyncHandler(async (req, res) => {
-    try {
-      // Check if the user is authenticated and available in req.user
-      if (!req.user) {
-        // If the user is not authenticated, respond with an error message
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
-  
-      const currentUserID = req.user._id; // Get the current user's ID from req.user
-  
-      // Implement logic to fetch lists attributed to the currently signed-in user
-      const userLists = await List.find({ author: currentUserID })
-        .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
-        .limit(20) // Limit the result to 20 documents
-        .exec();
-  
-      // Respond with the lists data
-      res.json(userLists);
-    } catch (error) {
-      // Handle any errors that occur during the database query or processing
-      res.status(500).json({ error: 'An error occurred while fetching lists' });
-    }
-  }),
 
 };
 
@@ -202,10 +152,50 @@ module.exports = userController;
 
 
 
-// RESPOND WITH USER DETAILS: res.status(201).json(user) how???
-    // Implement logic to verify user credentials and log them in
-    // Example: Check if the provided email and password match an existing user
-    // Example: const user = await User.findOne({ email: req.body.email });
-    // Example: if (!user || !user.comparePassword(req.body.password)) { /* Handle invalid login */ }
-    // Respond with the logged-in user details
-    // Example: res.json(user);
+  // getListsByUserId: asyncHandler(async (req, res) => {
+  //   try {
+  //     // Add logic to determine current user and permissions... viewing own lists or public lists...
+  //     const userid = req.params.userid; // Extract userid from URL params
+  //     const userLists = await List.find({ author: userid, status: 'published', visibility: 'public' })
+  //     .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
+  //     .limit(20) // Limit the result to 20 documents
+  //     .exec();
+  //     // Respond with the lists data
+  //     res.json(userLists);
+  //   } catch (error) {
+  //     res.status(500).json({error: "An error occured while fetching lists"})
+  //   }
+  // }),
+
+  // getListsByCurrentUser: asyncHandler(async (req, res) => {
+  //   try {
+  //     // Check if the user is authenticated and available in req.user
+  //     if (!req.user) {
+  //       // If the user is not authenticated, respond with an error message
+  //       return res.status(401).json({ error: 'Unauthorized' });
+  //     }
+  
+  //     const currentUserID = req.user._id; // Get the current user's ID from req.user
+  
+  //     // Implement logic to fetch lists attributed to the currently signed-in user
+  //     const userLists = await List.find({ author: currentUserID })
+  //       .sort({ dateAdded: 1 }) // Sort by dateAdded in descending order
+  //       .limit(20) // Limit the result to 20 documents
+  //       .exec();
+  
+  //     // Respond with the lists data
+  //     res.json(userLists);
+  //   } catch (error) {
+  //     // Handle any errors that occur during the database query or processing
+  //     res.status(500).json({ error: 'An error occurred while fetching lists' });
+  //   }
+  // }),
+
+
+  // DEPRECATED
+  // updateUser: asyncHandler(async (req, res) => {
+  //   // Implement logic to update the user details based on the request data
+  //   const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  //   // Respond with the updated user details
+  //   res.json(updatedUser);
+  // }),

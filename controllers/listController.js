@@ -18,7 +18,7 @@ const listController = {
     try {
       // Implement logic to fetch all published lists with visibility set to "public"
       const lists = await List.find({ public: true })
-        .sort({ timeCompleted: -1 }) // Sort by dateAdded in descending order
+        .sort({ timeCompleted: -1 }) // Sort by timeCompleted in descending order
         .limit(20) // Limit the result to 20 documents
         .populate({path: "author", select: "username"})
         .populate({path: "topic", select: "name"})
