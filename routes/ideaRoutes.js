@@ -7,6 +7,8 @@ router.post('/', ideaController.createIdea);
 // router.get('/', ideaController.getAllIdeas);
 // router.get('/new', ideaController.getNewIdea);
 // router.get('/:id', ideaController.getIdeaById);
+router.patch('/:id', ideaController.updateIdeaById);
+
 // router.delete('/:id', ideaController.deleteIdea);
 
 module.exports = router;

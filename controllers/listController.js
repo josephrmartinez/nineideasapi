@@ -45,33 +45,61 @@ const listController = {
   }),
 
   updateList: asyncHandler(async (req, res) => {
+    
     // Implement logic to update the list details based on the request data
     const updatedList = await List.findByIdAndUpdate(req.params.id, req.body, { new: true });
     // Respond with the updated list details
     res.json(updatedList);
   }),
 
+  // patchUpdateList: asyncHandler(async (req, res) => {
+  //   try {
+  //     console.log("req.body.updates:", req.body.updates)
+  //     // Find the list by ID
+  //     const list = await List.findById(req.params.id)
+  //     if (!list) {
+  //       return res.status(404).json({ error: 'List not found' });
+  //     }
+  
+  //     // Apply partial updates from the request body to the list
+  //     Object.assign(list, req.body.updates);
+  
+  //     // Save the updated list
+  //     const updatedList = await list.save({ new: true });
+  
+  //     // Respond with the updated list details
+  //     res.json(updatedList);
+  //     console.log("updated list:", updatedList)
+  //   } catch (error) {
+  //     res.status(500).json({ error: 'Internal server error' });
+  //   }
+  // }),
+  
+  // LEARN WHY I AM UNABLE TO UPDATE A LIST TEXT FIELD IN THIS MANNER
+  // BUT I AM ABLE TO SUCCESSFULLY UPDATE THE LIST TEXT FIELD VIA THE UPDATEIDEABYID ENDPOINT
   patchUpdateList: asyncHandler(async (req, res) => {
     try {
-      // Find the list by ID
-      const list = await List.findById(req.params.id);
-      if (!list) {
+      const { updates } = req.body;
+      console.log("updates", updates)
+  
+      const updatedList = await List.updateOne(
+        { _id: req.params.id },
+        { $set: updates },
+        { new: true }
+      );
+  
+      if (!updatedList) {
         return res.status(404).json({ error: 'List not found' });
       }
   
-      // Apply partial updates from the request body to the list
-      Object.assign(list, req.body.updates);
-  
-      // Save the updated list
-      const updatedList = await list.save();
-  
-      // Respond with the updated list details
       res.json(updatedList);
+      console.log("updated list:", updatedList);
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }
   }),
   
+
 
   deleteList: asyncHandler(async (req, res) => {
     const list = await List.findById(req.params.id)

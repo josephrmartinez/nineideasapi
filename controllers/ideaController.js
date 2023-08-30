@@ -13,6 +13,30 @@ const ideaController = {
     res.status(201).json(newIdea);
   }),
 
+  updateIdeaById: asyncHandler(async (req, res) => {
+    try {
+      const { updates } = req.body;
+  
+      const updatedIdea = await Idea.updateOne(
+        { _id: req.params.id },
+        { $set: updates },
+        { new: true }
+      );
+  
+      if (!updatedIdea) {
+        return res.status(404).json({ error: 'Idea not found' });
+      }
+  
+      res.json(updatedIdea);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }),
+
+
+
+
+
 //   getAllTopics: asyncHandler(async (req, res) => {
 //     // Implement logic to fetch all topics
 //     const topics = await Topic.find();
