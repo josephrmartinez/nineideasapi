@@ -8,22 +8,46 @@ require('dotenv').config()
 
 
 const userController = {
-  registerUser: asyncHandler(async (req, res) => {
-    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-        if (err) {
-            return next(err);
-        } else {
-            const newUser = new User({
-                username: req.body.username,
-                password: hashedPassword,
-                email: req.body.email,
-                bio: req.body.bio
-            });
-            await newUser.save();
-            res.status(201).json(newUser)
-        }
-      })
-    }),
+  // registerUser: asyncHandler(async (req, res) => {
+  //   bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+  //       if (err) {
+  //           return next(err);
+  //       } else {
+  //           const newUser = new User({
+  //               username: req.body.username,
+  //               password: hashedPassword,
+  //               email: req.body.email,
+  //               bio: req.body.bio
+  //           });
+  //           await newUser.save();
+  //           res.status(201).json(newUser)
+  //       }
+  //     })
+  //   }),
+
+  registerUser: asyncHandler(async (req, res, next) => {
+    const { username, password, email, bio } = req.body;
+  
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const newUser = new User({
+        username: username,
+        password: hashedPassword,
+        email: email,
+        bio: bio
+      });
+  
+      await newUser.save();
+  
+      res.status(201).json(newUser);
+    } catch (error) {
+        console.log("Registration error:", error)
+        res.status(400).json({error: error});
+    }
+  }),
+  
+
     loginUser: asyncHandler(async (req, res, next) => {
       const { username, password } = req.body;
   
