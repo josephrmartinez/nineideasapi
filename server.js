@@ -52,11 +52,13 @@ const authenticateUser = (req, res, next) => {
 const userRoutes = require('./routes/userRoutes');
 const listRoutes = require('./routes/listRoutes');
 const topicRoutes = require('./routes/topicRoutes');
-const ideaRoutes = require('./routes/ideaRoutes')
+const ideaRoutes = require('./routes/ideaRoutes');
+const userTopicRoutes = require('./routes/userTopicRoutes');
 
 app.use('/api/users', authenticateUser, userRoutes);
 app.use('/api/lists', authenticateUser, listRoutes);
 app.use('/api/topic',  topicRoutes)
+app.use('/api/user-topic', userTopicRoutes)
 app.use('/api/idea', ideaRoutes)
 
 app.listen(3000, ()=> console.log("server started!"))

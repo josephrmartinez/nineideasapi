@@ -4,6 +4,7 @@ const User = require('../models/user');
 
 const topicController = {
   createTopic: asyncHandler(async (req, res) => {
+    console.log("createTopic req.body.name:", req.body.name)
     // Implement logic to create a new topic based on the request data
     const newTopic = new Topic({ name: req.body.name });
     // Save the new topic to the database
