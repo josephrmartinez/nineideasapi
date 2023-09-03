@@ -1,6 +1,5 @@
 const asyncHandler = require('express-async-handler');
 const UserTopic = require('../models/userTopic');
-const User = require('../models/user');
 
 const topicController = {
   createTopic: asyncHandler(async (req, res) => {

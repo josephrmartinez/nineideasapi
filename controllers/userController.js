@@ -91,7 +91,7 @@ const userController = {
         .populate({
           path: 'lists',
           populate: [
-            { path: 'topic', select: 'name' },
+            { path: 'topic' },
             { path: 'comments', select: '_id' },
             { path: 'likes', select: '_id' }
           ],

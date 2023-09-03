@@ -26,7 +26,7 @@ console.log(
   async function main() {
     console.log("Debug: About to connect");
     await mongoose.connect(mongoDB);
-    console.log("Debug: Should be connected?");
+    console.log("Connected to DB");
     // await createUsers();
     // await createLists();
     await createTopics(topicsArray);
@@ -69,45 +69,45 @@ async function userCreate(userDetails) {
     return newUser;
   }
   
-  // Function to create multiple users at once
-  async function createUsers() {
-    console.log("Adding users");
-    const usersData = [
-      {
-        username: "josephm",
-        password: "mango",
-        email: "joseph.r.martinez@gmail.com",
-        bio: "josephm.dev"
-      },
-      {
-        username: "peterg",
-        password: "mango",
-        email: "peterg@gmail.com",
-        bio: "thinking about moving to michigan"
-      },
-      {
-        username: "sashan",
-        password: "mango",
-        email: "sashan@gmail.com",
-        bio: "writing a book"
-      },
-      {
-        username: "timo",
-        password: "mango",
-        email: "timo@gmail.com",
-        bio: "timo.ai"
-      },
-      {
-        username: "mahmoudh",
-        password: "mango",
-        email: "mahmoudh@gmail.com",
-        bio: "open to book suggestions"
-      }
-    ];
-  
-    const createPromises = usersData.map(userCreate);
-    await Promise.all(createPromises);
-  }
+// Function to create multiple users at once
+async function createUsers() {
+  console.log("Adding users");
+  const usersData = [
+    {
+      username: "josephm",
+      password: "mango",
+      email: "joseph.r.martinez@gmail.com",
+      bio: "josephm.dev"
+    },
+    {
+      username: "peterg",
+      password: "mango",
+      email: "peterg@gmail.com",
+      bio: "thinking about moving to michigan"
+    },
+    {
+      username: "sashan",
+      password: "mango",
+      email: "sashan@gmail.com",
+      bio: "writing a book"
+    },
+    {
+      username: "timo",
+      password: "mango",
+      email: "timo@gmail.com",
+      bio: "timo.ai"
+    },
+    {
+      username: "mahmoudh",
+      password: "mango",
+      email: "mahmoudh@gmail.com",
+      bio: "open to book suggestions"
+    }
+  ];
+
+  const createPromises = usersData.map(userCreate);
+  await Promise.all(createPromises);
+}
   
 
 
@@ -252,4 +252,30 @@ const topicsArray =
     "Creative ways to engage with the unconscious mind",
     "Creating art as a form of self exploration and self therapy",
     "Creative approaches to boost self awareness and personal growth",
-    "Unique activities for balancing the masculine and feminine aspects within us"]
+    "Unique activities for balancing the masculine and feminine aspects within us",
+    "Bold steps to repurpose an old bicycle into a versatile garden art piece",
+"Breathtakingly aesthetic revamp ideas for the attic",
+"Clever ways to transform home-cleaning routines",
+"Sneaky approaches to integrate fitness equipment into home decor",
+"Exciting outdoor hobbies to reduce screen time and improve wellness",
+"Ways to incorporate more mesmerizing, inspiring, or unique pieces into home or office decor",
+"Eco-friendly home improvement projects",
+"Inventive concepts for redesigning a room",
+"Improvements to make your work space more inspiring",
+"Clever approaches to picnic planning in line with different world cultures",
+"Turning your home into a peaceful retreat",
+"Alternatives for measuring success beyond money",
+"Constructive activities to enhance empathy and generosity among children",
+"Innovative ways to embed sustainability and eco-consciousness in everyday practices",
+"Finding meaning through travel: Turning globe-trotting into spiritual growth",
+"Community wealth: Businesses that would meaningfully improve your local area",
+"Ways to teach money management",
+"Aesthetic expression of values: Incorporating ethics and belief systems into home decor",
+"Meaningful traditions: Ideas for new family traditions",
+"Inspiring personal growth via solitude: Ideas for creating an introspection spot at home",
+"Balancing work and wellness: Home office set up for stress-free productivity",
+"Unrealistic but imaginative and unique community spaces",
+"Value-based investing: Making your money work for a cause",
+"Profit with a purpose: Enterprising routes to starting a community-focused business",
+"Strategies for improving mental health through connection with nature"
+]

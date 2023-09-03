@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const topicController = require('../controllers/topicController');
+const userTopicController = require('../controllers/userTopicController');
 
 // Define the API routes related to topics
-router.post('/', topicController.createTopic);
+router.post('/', userTopicController.createTopic);
 // router.get('/', topicController.getAllTopics);
 // router.get('/new', topicController.getNewTopic);
 // router.get('/:id', topicController.getTopicById);
-router.delete('/:id', topicController.deleteTopic);
+router.delete('/:id', userTopicController.deleteTopic);
 
 module.exports = router;

@@ -50,15 +50,16 @@ const authenticateUser = (req, res, next) => {
 
 // Import and use the routes
 const userRoutes = require('./routes/userRoutes');
-const listRoutes = require('./routes/listRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const ideaRoutes = require('./routes/ideaRoutes');
 const userTopicRoutes = require('./routes/userTopicRoutes');
+const listRoutes = require('./routes/listRoutes');
 
 app.use('/api/users', authenticateUser, userRoutes);
-app.use('/api/lists', authenticateUser, listRoutes);
 app.use('/api/topic',  topicRoutes)
 app.use('/api/user-topic', userTopicRoutes)
 app.use('/api/idea', ideaRoutes)
+app.use('/api/lists', authenticateUser, listRoutes);
+
 
 app.listen(3000, ()=> console.log("server started!"))

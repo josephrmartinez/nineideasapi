@@ -82,14 +82,14 @@ const listController = {
       const { updates } = req.body;
       console.log("updates", updates)
   
-      const updatedList = await List.updateOne(
+      const updatedList = await List.findOneAndUpdate(
         { _id: req.params.id },
         { $set: updates },
         { new: true }
       );
   
       if (!updatedList) {
-        return res.status(404).json({ error: 'List not found' });
+        return res.status(404).json({ error: 'Error making patch update to list' });
       }
   
       res.json(updatedList);
