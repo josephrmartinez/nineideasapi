@@ -11,15 +11,10 @@ const UserSchema = new Schema({
   lists: [{ type: Schema.Types.ObjectId, ref: "List" }]
 });
 
-// UserSchema.post('save', function(error, doc, next) {
-//   next(error);
-// });
-
 UserSchema.virtual("completedLists").get(function () {
   const completedLists = this.lists.filter(list => list.completed);
   return completedLists.length;
 });
-
 
 UserSchema.virtual("currentStreak").get(function () {
   function countConsecutiveDates(data) {
@@ -53,8 +48,6 @@ UserSchema.virtual("currentStreak").get(function () {
 
   return streak;
 });
-
-
 
 UserSchema.virtual("recordStreak").get(function () {
   function countConsecutiveDates(data) {
