@@ -6,7 +6,9 @@ const topicController = {
   createTopic: asyncHandler(async (req, res) => {
     console.log("createTopic req.body.name:", req.body.name)
     // Implement logic to create a new topic based on the request data
-    const newTopic = new Topic({ name: req.body.name });
+    const newTopic = new Topic({ 
+      name: req.body.name,
+      public: req.body.public === false ? false : true });
     // Save the new topic to the database
     await newTopic.save();
     // Respond with the created topic details
@@ -16,6 +18,13 @@ const topicController = {
   getAllTopics: asyncHandler(async (req, res) => {
     // Implement logic to fetch all topics
     const topics = await Topic.find();
+    // Respond with the array of topics
+    res.json(topics);
+  }),
+
+  getAllPublicTopics: asyncHandler(async (req, res) => {
+    // Implement logic to fetch all topics
+    const topics = await Topic.find({public: true});
     // Respond with the array of topics
     res.json(topics);
   }),

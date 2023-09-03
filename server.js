@@ -52,12 +52,10 @@ const authenticateUser = (req, res, next) => {
 const userRoutes = require('./routes/userRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const ideaRoutes = require('./routes/ideaRoutes');
-const userTopicRoutes = require('./routes/userTopicRoutes');
 const listRoutes = require('./routes/listRoutes');
 
 app.use('/api/users', authenticateUser, userRoutes);
 app.use('/api/topic',  topicRoutes)
-app.use('/api/user-topic', userTopicRoutes)
 app.use('/api/idea', ideaRoutes)
 app.use('/api/lists', authenticateUser, listRoutes);
 

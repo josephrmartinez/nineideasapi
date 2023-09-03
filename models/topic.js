@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const TopicSchema = new Schema({
   name: { type: String, required: true, unique: true },
-  type: { type: String, default: 'Topic' }
+  public: { type: Boolean, default: true },
 });
 
 
