@@ -10,10 +10,15 @@ const cookieParser = require('cookie-parser');
 
 // connect to MongoDB
 mongoose.set('strictQuery', false);
-const mongoDB = process.env.MONGODB_URI
+const mongoDB = process.env.MONGODB_URI;
+const mongoDBOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  dbName: 'production', // Specify the database name here
+};
 main().catch((err) => console.log(err));
 async function main() {
-  await mongoose.connect(mongoDB);
+  await mongoose.connect(mongoDB, mongoDBOptions);
 }
 
 app.use(cors({
@@ -32,7 +37,7 @@ const authenticateUser = (req, res, next) => {
     try {
       const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);
       req.user = decodedToken.userId;
-      console.log('User authenticated. Decoded token:', decodedToken);
+      // console.log('User authenticated. Decoded token:', decodedToken);
     } catch (error) {
       if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
         // Invalid token or expired token

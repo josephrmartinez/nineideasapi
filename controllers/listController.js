@@ -52,12 +52,12 @@ const listController = {
   }),
 
 
-  // WHY I AM UNABLE TO UPDATE A LIST TEXT FIELD IN THIS MANNER
+  // UNABLE TO UPDATE A LIST TEXT FIELD IN THIS MANNER
   // BUT I AM ABLE TO SUCCESSFULLY UPDATE THE LIST TEXT FIELD VIA THE UPDATEIDEABYID ENDPOINT
   patchUpdateList: asyncHandler(async (req, res) => {
     try {
       const { updates } = req.body;
-      console.log("updates", updates)
+      // console.log("updates", updates)
   
       const updatedList = await List.findOneAndUpdate(
         { _id: req.params.id },
@@ -70,7 +70,7 @@ const listController = {
       }
   
       res.json(updatedList);
-      console.log("updated list:", updatedList);
+      // console.log("updated list:", updatedList);
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }

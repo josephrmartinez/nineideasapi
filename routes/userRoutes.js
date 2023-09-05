@@ -18,12 +18,3 @@ router.patch('/:id', userController.patchUpdateUser)
 router.delete('/:id', userController.deleteUser);
 
 module.exports = router;
-
-
-
-
-// Get lists by a specific user. DEPRECATED?
-// router.get('/:id/lists', userController.getListsByUserId);
-
-// Update user by user ID. DEPRECATED?
-// router.put('/:id', userController.updateUser);

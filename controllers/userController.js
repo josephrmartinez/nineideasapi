@@ -5,26 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
-
-
 const userController = {
-  // registerUser: asyncHandler(async (req, res) => {
-  //   bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-  //       if (err) {
-  //           return next(err);
-  //       } else {
-  //           const newUser = new User({
-  //               username: req.body.username,
-  //               password: hashedPassword,
-  //               email: req.body.email,
-  //               bio: req.body.bio
-  //           });
-  //           await newUser.save();
-  //           res.status(201).json(newUser)
-  //       }
-  //     })
-  //   }),
-
   registerUser: asyncHandler(async (req, res, next) => {
     const { username, password, email, bio } = req.body;
   
@@ -51,7 +32,7 @@ const userController = {
     loginUser: asyncHandler(async (req, res, next) => {
       const { username, password } = req.body;
   
-      // Validate user credentials (usually against a user store like a database)
+      // Validate user credentials
       const user = await User.findOne({ username });
   
       if (!user) {
@@ -67,7 +48,7 @@ const userController = {
       const token = jwt.sign({ userId: user._id, username: user.username }, process.env.ACCESS_TOKEN);
   
       // Return the token to the client
-      res.cookie('accessToken', token, { httpOnly: false, sameSite: 'lax' });
+      res.cookie('nineideasAccessToken', token, { httpOnly: false, sameSite: 'lax' });
       // console.log(res.getHeaders())
       res.json({ success: true, token: token });
     }),
@@ -133,7 +114,7 @@ const userController = {
     res.json(response);
     } catch (error) {
       // If there's any error during the operation, return a 500 Internal Server Error response
-      console.error('Error:', error);
+      // console.error('Error:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }),
@@ -156,7 +137,7 @@ const userController = {
       // Respond with the updated list details
       res.json(updatedUser);
     } catch (error) {
-      console.error('Error updating user:', error);
+      // console.error('Error updating user:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   }),

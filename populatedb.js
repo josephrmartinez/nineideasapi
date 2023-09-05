@@ -25,7 +25,14 @@ console.log(
   
   async function main() {
     console.log("Debug: About to connect");
-    await mongoose.connect(mongoDB);
+
+    const mongoDBOptions = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      dbName: 'production', // Specify the database name here
+    };
+    
+    await mongoose.connect(mongoDB, mongoDBOptions);
     console.log("Connected to DB");
     // await createUsers();
     // await createLists();
