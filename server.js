@@ -22,7 +22,7 @@ async function main() {
 }
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Replace with your frontend URL
+  origin: 'https://nineideas.netlify.app', // Replace with your frontend URL
   credentials: true, // Allow cookies to be sent with requests
 }));
 app.use(express.json())
@@ -65,4 +65,4 @@ app.use('/api/idea', ideaRoutes)
 app.use('/api/lists', authenticateUser, listRoutes);
 
 
-app.listen(3000, ()=> console.log("server started!"))
+app.listen(8080, ()=> console.log("server started!"))
