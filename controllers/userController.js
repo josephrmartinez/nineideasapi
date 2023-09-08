@@ -48,8 +48,9 @@ const userController = {
       const token = jwt.sign({ userId: user._id, username: user.username }, process.env.ACCESS_TOKEN);
   
       // Return the token to the client
-      res.cookie('nineideasAccessToken', token, { httpOnly: false, sameSite: 'lax' });
-      // console.log(res.getHeaders())
+      // res.cookie('nineideasAccessToken', token, { domain: 'nineideas.netlify.app', path: '/', httpOnly: false, sameSite: 'None', secure: true });
+      // console.log("Login headers:", res.getHeaders())
+      // console.log("Login token", token)
       res.json({ success: true, token: token });
     }),
       

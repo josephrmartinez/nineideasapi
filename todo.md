@@ -1,0 +1,3 @@
+- Use local storage for the jwt.
+    - I am going to update my code on the server to just return a signed JSON web token. No more sending a cookie. 
+    - Then, on the frontend, I will update my code to just expect a token. I will need to decode this token and save it in localstorage. But no more handling cookies. 
