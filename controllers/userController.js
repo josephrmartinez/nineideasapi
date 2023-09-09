@@ -15,7 +15,6 @@ const userController = {
       const newUser = new User({
         username: username,
         password: hashedPassword,
-        email: email,
         bio: bio
       });
   
@@ -47,10 +46,6 @@ const userController = {
       // If the credentials are valid, create a JWT token
       const token = jwt.sign({ userId: user._id, username: user.username }, process.env.ACCESS_TOKEN);
   
-      // Return the token to the client
-      // res.cookie('nineideasAccessToken', token, { domain: 'nineideas.netlify.app', path: '/', httpOnly: false, sameSite: 'None', secure: true });
-      // console.log("Login headers:", res.getHeaders())
-      // console.log("Login token", token)
       res.json({ success: true, token: token });
     }),
       
@@ -96,13 +91,12 @@ const userController = {
       });
 
 
-      const { _id, username, email, createdAt, bio, currentStreak, completedLists, recordStreak } = user;
+      const { _id, username, createdAt, bio, currentStreak, completedLists, recordStreak } = user;
 
     // Create a response object with user data and the current streak
     const response = {
       _id,
       username,
-      email,
       createdAt,
       bio,
       lists: filteredLists,
@@ -156,52 +150,3 @@ const userController = {
 module.exports = userController;
 
 
-
-
-  // getListsByUserId: asyncHandler(async (req, res) => {
-  //   try {
-  //     // Add logic to determine current user and permissions... viewing own lists or public lists...
-  //     const userid = req.params.userid; // Extract userid from URL params
-  //     const userLists = await List.find({ author: userid, status: 'published', visibility: 'public' })
-  //     .sort({ dateAdded: -1 }) // Sort by dateAdded in descending order
-  //     .limit(20) // Limit the result to 20 documents
-  //     .exec();
-  //     // Respond with the lists data
-  //     res.json(userLists);
-  //   } catch (error) {
-  //     res.status(500).json({error: "An error occured while fetching lists"})
-  //   }
-  // }),
-
-  // getListsByCurrentUser: asyncHandler(async (req, res) => {
-  //   try {
-  //     // Check if the user is authenticated and available in req.user
-  //     if (!req.user) {
-  //       // If the user is not authenticated, respond with an error message
-  //       return res.status(401).json({ error: 'Unauthorized' });
-  //     }
-  
-  //     const currentUserID = req.user._id; // Get the current user's ID from req.user
-  
-  //     // Implement logic to fetch lists attributed to the currently signed-in user
-  //     const userLists = await List.find({ author: currentUserID })
-  //       .sort({ dateAdded: 1 }) // Sort by dateAdded in descending order
-  //       .limit(20) // Limit the result to 20 documents
-  //       .exec();
-  
-  //     // Respond with the lists data
-  //     res.json(userLists);
-  //   } catch (error) {
-  //     // Handle any errors that occur during the database query or processing
-  //     res.status(500).json({ error: 'An error occurred while fetching lists' });
-  //   }
-  // }),
-
-
-  // DEPRECATED
-  // updateUser: asyncHandler(async (req, res) => {
-  //   // Implement logic to update the user details based on the request data
-  //   const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  //   // Respond with the updated user details
-  //   res.json(updatedUser);
-  // }),
