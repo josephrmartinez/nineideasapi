@@ -30,6 +30,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
 
 
+const authenticateUser = (req, res, next) => {
+  const token = req.headers.authorization; // Read the accessToken from the request headers
+  console.log("calling authenticateUser middleware")
+  if (token) {
+    try {
+      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);
+      req.user = decodedToken.userId;
+      console.log('User authenticated. Decoded token:', decodedToken);
+    } catch (error) {
+      if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+        // Invalid token or expired token
+        return res.status(401).json({ error: 'Invalid or expired token.' });
+      } else {
+        // Other unexpected errors
+        return res.status(500).json({ error: 'Internal server error.' });
+      }
+    }
+  }
+
+  // Continue to the next middleware or route handler
+  next();
+};
+
+
 // Middleware to verify JWT token and set the current user (if authenticated)
 // const authenticateUser = (req, res, next) => {
 //   const token = req.cookies.accessToken; // Read the accessToken from cookies
@@ -59,7 +83,7 @@ const topicRoutes = require('./routes/topicRoutes');
 const ideaRoutes = require('./routes/ideaRoutes');
 const listRoutes = require('./routes/listRoutes');
 
-app.use('/api/users',  userRoutes); //authenticateUser,
+app.use('/api/users', authenticateUser, userRoutes); //authenticateUser,
 app.use('/api/topic',  topicRoutes)
 app.use('/api/idea', ideaRoutes)
 app.use('/api/lists',  listRoutes); //authenticateUser,
