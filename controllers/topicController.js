@@ -49,7 +49,7 @@ const topicController = {
   
       // Check if the user is authenticated and get the completedListTopics
       if (req.user) {
-        const currentUserID = req.user._id;
+        const currentUserID = req.user
         const user = await User.findById(currentUserID).populate('lists');
         completedListTopics = user.lists.map((list) => list.topic);
       }

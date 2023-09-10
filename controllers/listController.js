@@ -37,7 +37,6 @@ const listController = {
     const list = await List.findById(req.params.id)
       .populate({path: "author", select: "username"})
       .populate({path: "topic", select: "name"})
-      .populate("comments")
       .populate("ideas")
       .exec();
     // Respond with the list details
