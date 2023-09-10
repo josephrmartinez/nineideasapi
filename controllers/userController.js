@@ -69,7 +69,6 @@ const userController = {
           path: 'lists',
           populate: [
             { path: 'topic' },
-            { path: 'comments', select: '_id' },
             { path: 'likes', select: '_id' }
           ],
           select: 'topic likes public completed'
