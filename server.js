@@ -22,7 +22,7 @@ async function main() {
 }
 
 app.use(cors({
-  origin: ['https://nineideas.netlify.app', 'http://localhost:5173'], // Replace with your frontend URL
+  origin: ['https://nineideas.netlify.app', 'https://nineideas.net', 'https://www.nineideas.net', 'http://localhost:5173'], // Replace with your frontend URL
   credentials: true, // Allow cookies to be sent with requests
 }));
 app.use(express.json())
