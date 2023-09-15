@@ -44,7 +44,6 @@ const authenticateUser = (req, res, next) => {
       try {
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);
         req.user = decodedToken.userId;
-        console.log('User authenticated. Decoded token:', decodedToken);
       } catch (error) {
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
           // Invalid token or expired token

@@ -9,7 +9,7 @@ router.get('/:id', listController.getListById);
 router.put('/:id', listController.updateList);
 router.patch('/:id', listController.patchUpdateList);
 router.delete('/:id', listController.deleteList);
-
+router.post('/check', listController.contentModeration);
 
 // More list-related routes if needed...
 

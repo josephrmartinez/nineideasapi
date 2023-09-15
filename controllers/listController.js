@@ -1,5 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const List = require('../models/list');
+const OpenAI = require('openai')
+require('dotenv').config()
 
 const listController = {
   createList: asyncHandler(async (req, res) => {
@@ -86,10 +88,67 @@ const listController = {
 
       // Implement logic to delete the list by ID
       await List.findByIdAndDelete(req.params.id);
-      // Respond with a success message
-      res.json({ authorId });
+      // Respond with a success status and no response body
+      res.status(204).send();
     }
   }),
+
+
+  contentModeration: asyncHandler(async (req, res) => {
+    const apiKey = process.env.OPENAIKEY;
+    const openai = new OpenAI({apiKey: apiKey});
+
+    const ideaListText = req.body.ideaList.map(idea => idea.text)
+
+    try {
+    
+        const prompt = 
+        `You are a content moderation tool that evaluates the ideaList provided by a user. 
+        The ideaList is an array of text-based ideas. 
+        Your task is to analyze the ideaList below and classify it as either 'readable content' or 'unreadable content.'
+        'Readable content' should be identified when all of the ideaList contains meaningful words, phrases, or sentences that represent genuine ideas or thoughts.
+        'Unreadable content' should be detected when the ideaList is comprised of gibberish, random characters, or nonsense text, such as 'dsafkj dsflkjasdkjlhsa djklsdaf asdkjhf.'
+
+        Please take the ideaList deliniated by three asterisks below as input and return a boolean value indicating whether the list contains 'readable content' (true) or 'unreadable content' (false).
+        If there is any unreadable content at all, you should return 'false'.
+
+        The goal is to identify whether the text represents genuine ideas or is simply nonsensical.
+
+        ***
+        ${ideaListText}
+        ***
+
+        `;
+
+    
+        console.log("API prompt:", prompt)
+
+        const completion = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo-0613",
+            messages: [
+                { role: "user", content: prompt }
+            ]
+            });
+
+        console.log("API completion:", completion)
+
+        const generatedText = completion.choices[0].message.content;
+
+        // Parse the generatedText to extract the boolean value (true or false) indicating 'readable content'
+        const isReadableContent = generatedText.trim().toLowerCase() === "true";
+
+
+        console.log("isReadableContent:", isReadableContent)
+
+        res.json(isReadableContent) 
+
+    } catch (error) {
+        console.error('Error with content moderation:', error);
+        throw error;
+      }  
+  }
+  )
+
 };
 
 module.exports = listController;
