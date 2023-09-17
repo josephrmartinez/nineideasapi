@@ -85,17 +85,18 @@ const listController = {
 
     if (list) {
       const authorId = list.author._id
+      console.log("extracted author ID:", authorId)
 
       // Implement logic to delete the list by ID
       await List.findByIdAndDelete(req.params.id);
-      // Respond with a success status and no response body
-      res.status(204).send();
+      // Respond with an OK status and the author ID
+      res.status(200).json(authorId);
     }
   }),
 
 
   contentModeration: asyncHandler(async (req, res) => {
-    const apiKey = process.env.OPENAIKEY;
+    const apiKey = process.env.OPENAI_API_KEY;
     const openai = new OpenAI({apiKey: apiKey});
 
     const ideaListText = req.body.ideaList.map(idea => idea.text)
@@ -120,25 +121,18 @@ const listController = {
 
         `;
 
-    
-        console.log("API prompt:", prompt)
 
         const completion = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo-0613",
+            model: "gpt-3.5-turbo",
             messages: [
                 { role: "user", content: prompt }
             ]
             });
 
-        console.log("API completion:", completion)
-
         const generatedText = completion.choices[0].message.content;
 
         // Parse the generatedText to extract the boolean value (true or false) indicating 'readable content'
         const isReadableContent = generatedText.trim().toLowerCase() === "true";
-
-
-        console.log("isReadableContent:", isReadableContent)
 
         res.json(isReadableContent) 
 
