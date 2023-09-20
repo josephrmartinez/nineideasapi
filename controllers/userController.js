@@ -83,11 +83,7 @@ const userController = {
       const isAuthenticatedUser = req.user === req.params.id
 
       // Filter lists based on visibility
-      const filteredLists = user.lists.map(list => {
-        if (isAuthenticatedUser || list.public) {
-          return list;
-        }
-      });
+      const filteredLists = user.lists.filter(list => isAuthenticatedUser || list.public);
 
 
       const { _id, username, createdAt, bio, currentStreak, completedLists, recordStreak } = user;
