@@ -58,10 +58,10 @@ UserSchema.virtual("recordStreak").get(function () {
     
     let count = 1;
     let maxStreak = 1;
-    const lastDate = new Date(data[data.length - 1].dateAdded);
+    const lastDate = new Date(data[data.length - 1].timeCompleted);
 
     for (let i = data.length - 2; i >= 0; i--) {
-      const currentDate = new Date(data[i].dateAdded);
+      const currentDate = new Date(data[i].timeCompleted);
 
       if (currentDate.getDate() === lastDate.getDate() - 1) {
         count++;
@@ -81,8 +81,8 @@ UserSchema.virtual("recordStreak").get(function () {
   const completedLists = this.lists.filter(list => list.completed);
 
   completedLists.sort((a, b) => {
-    const dateA = new Date(a.dateAdded);
-    const dateB = new Date(b.dateAdded);
+    const dateA = new Date(a.timeCompleted);
+    const dateB = new Date(b.timeCompleted);
     return dateA - dateB;
   });
 
