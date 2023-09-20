@@ -37,6 +37,8 @@ UserSchema.virtual("currentStreak").get(function () {
 
   const completedLists = this.lists.filter(list => list.completed);
 
+  console.log("completedLists in currentStreak virtual:", completedLists)
+
   completedLists.sort((a, b) => {
     const dateA = new Date(a.timeCompleted);
     const dateB = new Date(b.timeCompleted);
