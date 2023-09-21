@@ -20,24 +20,34 @@ UserSchema.virtual("currentStreak").get(function () {
     if (data.length === 0) {
       return 0; // No streak if there are no completedLists
     }
-    
-    let count = 1;
-    const lastDate = new Date(data[data.length - 1].timeCompleted);
+  
+    let count = 0;
+    let lastCompletedListDate = new Date(data[data.length - 1].timeCompleted);
+    lastCompletedListDate.setHours(0, 0, 0, 0); // Set time to midnight for date comparison
+  
     for (let i = data.length - 2; i >= 0; i--) {
-      const currentDate = new Date(data[i].timeCompleted);
-      if (currentDate.getDate() === lastDate.getDate() - 1) {
+      const previousDate = new Date(data[i].timeCompleted);
+      previousDate.setHours(0, 0, 0, 0); // Set time to midnight for date comparison
+  
+      // Calculate the date difference in milliseconds
+      const timeDifference = lastCompletedListDate - previousDate;
+  
+      // Check if the time difference is less than or equal to 24 hours (1 day)
+      if (timeDifference <= 24 * 60 * 60 * 1000) {
         count++;
-        lastDate.setTime(currentDate.getTime());
       } else {
-        break;
+        break; // If the time difference is too large, the streak is broken
       }
+  
+      lastCompletedListDate = previousDate; // Update currentDate to the previous date
     }
+  
     return count;
   }
+  
 
   const completedLists = this.lists.filter(list => list.completed);
 
-  console.log("completedLists in currentStreak virtual:", completedLists)
 
   completedLists.sort((a, b) => {
     const dateA = new Date(a.timeCompleted);
@@ -45,51 +55,55 @@ UserSchema.virtual("currentStreak").get(function () {
     return dateA - dateB;
   });
 
-  const streak = countConsecutiveDates(completedLists);
+  const currentStreak = countConsecutiveDates(completedLists);
 
-  return streak;
+  return currentStreak;
 });
 
 UserSchema.virtual("recordStreak").get(function () {
-  function countConsecutiveDates(data) {
-    if (data.length === 0) {
-      return 0; // No streak if there are no completedLists
-    }
-    
-    let count = 1;
-    let maxStreak = 1;
-    const lastDate = new Date(data[data.length - 1].timeCompleted);
+  // Function to calculate the streak for a given list of completed lists
+  function calculateStreak(completedLists) {
+    let count = 0;
+    let maxStreak = 0;
+    let lastCompletedListDate = new Date(completedLists[completedLists.length - 1].timeCompleted);
+    lastCompletedListDate.setHours(0, 0, 0, 0);
 
-    for (let i = data.length - 2; i >= 0; i--) {
-      const currentDate = new Date(data[i].timeCompleted);
+    for (let i = completedLists.length - 2; i >= 0; i--) {
+      const previousDate = new Date(completedLists[i].timeCompleted);
+      previousDate.setHours(0, 0, 0, 0);
+      const timeDifference = lastCompletedListDate - previousDate;
 
-      if (currentDate.getDate() === lastDate.getDate() - 1) {
+      if (timeDifference <= 24 * 60 * 60 * 1000) {
         count++;
-        lastDate.setTime(currentDate.getTime());
       } else {
-        maxStreak = Math.max(maxStreak, count);
-        count = 1;
-        lastDate.setTime(currentDate.getTime());
+        if (count > maxStreak) {
+          maxStreak = count;
+        }
+        count = 0;
       }
+
+      lastCompletedListDate = previousDate;
     }
 
-    maxStreak = Math.max(maxStreak, count);
+    if (count > maxStreak) {
+      maxStreak = count;
+    }
 
     return maxStreak;
   }
 
-  const completedLists = this.lists.filter(list => list.completed);
-
+  const completedLists = this.lists.filter((list) => list.completed);
   completedLists.sort((a, b) => {
     const dateA = new Date(a.timeCompleted);
     const dateB = new Date(b.timeCompleted);
     return dateA - dateB;
   });
 
-  const streak = countConsecutiveDates(completedLists);
+  const recordStreak = calculateStreak(completedLists);
 
-  return streak;
+  return recordStreak;
 });
+
 
 
 // Export model
