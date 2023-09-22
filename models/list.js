@@ -5,8 +5,8 @@ const { DateTime } = require("luxon")
 const ListSchema = new Schema({
   topic: { type: Schema.Types.ObjectId, required: true, ref: "Topic" },
   ideas: [{ type: Schema.Types.ObjectId, ref: "Idea" }],
-  timeStarted: { type: Date, default: Date.now },
-  timeCompleted: {type: Date, default: Date.now },
+  timeStarted: { type: Date },
+  timeCompleted: {type: Date },
   author: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
