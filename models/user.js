@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DateTime } = require("luxon")
 
 const Schema = mongoose.Schema;
 
@@ -16,48 +17,52 @@ UserSchema.virtual("completedLists").get(function () {
 });
 
 UserSchema.virtual("currentStreak").get(function () {
-  function countConsecutiveDates(data) {
-    if (data.length === 0) {
-      return 0; // No streak if there are no completedLists
-    }
+  const completedListDates = this.lists
+    .filter(list => list.dateCompleted)
+    .map(list => list.dateCompleted)
+
+  // function countConsecutiveDates(dates) {
+  //   if (dates.length === 0) {
+  //     return 0; // No streak if there are no completedLists
+  //   }
   
-    let count = 0;
-    let lastCompletedListDate = new Date(data[data.length - 1].timeCompleted);
-    lastCompletedListDate.setHours(0, 0, 0, 0); // Set time to midnight for date comparison
+  // //   let count = 0;
+  // //   let lastCompletedListDate = DateTime.fromISO(dates[dates.length - 1]).toFormat("MM/dd/yyyy");
   
-    for (let i = data.length - 2; i >= 0; i--) {
-      const previousDate = new Date(data[i].timeCompleted);
-      previousDate.setHours(0, 0, 0, 0); // Set time to midnight for date comparison
+  // //   for (let i = dates.length - 2; i >= 0; i--) {
+  // //     const previousDate = new Date(dates[i]).toDateString();
   
-      // Calculate the date difference in milliseconds
-      const timeDifference = lastCompletedListDate - previousDate;
+  // //     if (lastCompletedListDate === previousDate) {
+  // //       count++;
+  // //     } else {
+  // //       break; // If the time difference is too large, the streak is broken
+  // //     }
   
-      // Check if the time difference is less than or equal to 24 hours (1 day)
-      if (timeDifference <= 24 * 60 * 60 * 1000) {
-        count++;
-      } else {
-        break; // If the time difference is too large, the streak is broken
-      }
+  // //     lastCompletedListDate = previousDate; // Update currentDate to the previous date
+  // //   }
   
-      lastCompletedListDate = previousDate; // Update currentDate to the previous date
-    }
+  // //   return count;
+  // // }
   
-    return count;
-  }
+  // return 3
+  // }
   
 
-  const completedLists = this.lists.filter(list => list.completed);
+  // const completedListDates = this.lists.filter(list => list.dateCompleted)
+  // .map(list => list.dateCompleted)
+  // .filter((value, index, self) => self.indexOf(value) === index)
+  // .sort((a, b) => {
+  //   const dateA = new Date(a);
+  //   const dateB = new Date(b);
+  //   return dateA - dateB;
+  // });
 
+  console.log("completedListDates:", completedListDates)
 
-  completedLists.sort((a, b) => {
-    const dateA = new Date(a.timeCompleted);
-    const dateB = new Date(b.timeCompleted);
-    return dateA - dateB;
-  });
+  // const currentStreak = countConsecutiveDates(completedListDates);
 
-  const currentStreak = countConsecutiveDates(completedLists);
-
-  return currentStreak;
+  // return currentStreak;
+  return 3
 });
 
 UserSchema.virtual("recordStreak").get(function () {

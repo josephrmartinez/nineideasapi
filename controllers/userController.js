@@ -71,7 +71,7 @@ const userController = {
             { path: 'topic' },
             { path: 'likes', select: '_id' }
           ],
-          select: 'topic likes public completed timeCompleted'
+          select: 'topic likes public completed timeCompleted timeStarted dateCompleted'
         })
         .exec();
   

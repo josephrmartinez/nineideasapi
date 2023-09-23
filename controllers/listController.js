@@ -10,6 +10,7 @@ const listController = {
       { topic: req.body.topic,
         ideas: req.body.ideas,
         author: req.body.author,
+        timeStarted: req.body.timeStarted
       });
       await newList.save()
       res.status(201).json(newList);

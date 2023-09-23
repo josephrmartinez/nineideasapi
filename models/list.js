@@ -7,6 +7,7 @@ const ListSchema = new Schema({
   ideas: [{ type: Schema.Types.ObjectId, ref: "Idea" }],
   timeStarted: { type: Date },
   timeCompleted: {type: Date },
+  dateCompleted: {type: Date },
   author: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
