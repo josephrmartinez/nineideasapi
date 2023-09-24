@@ -104,7 +104,7 @@ const userController = {
     res.json(response);
     } catch (error) {
       // If there's any error during the operation, return a 500 Internal Server Error response
-      // console.error('Error:', error);
+      console.error('Error:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }),

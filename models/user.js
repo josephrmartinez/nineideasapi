@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { DateTime } = require("luxon")
 
 const Schema = mongoose.Schema;
 
@@ -11,39 +10,47 @@ const UserSchema = new Schema({
   lists: [{ type: Schema.Types.ObjectId, ref: "List" }]
 });
 
+
+UserSchema.methods.calculateSortedCompletedListDates = function () {
+  if (!this._sortedCompletedListDates) {
+    this._sortedCompletedListDates = this.lists
+      .filter(list => list.dateCompleted)
+      .map(list => new Date(list.dateCompleted).getTime())
+      .filter((value, index, self) => self.indexOf(value) === index)
+      .sort((a, b) => a - b)
+      .map(timestamp => new Date(timestamp).toISOString());
+  }
+  return this._sortedCompletedListDates;
+};
+
 UserSchema.virtual("completedLists").get(function () {
   const completedLists = this.lists.filter(list => list.completed);
   return completedLists.length;
 });
 
-
 UserSchema.virtual("currentStreak").get(function () {
-  const sortedCompletedListDates = this.lists
-    .filter(list => list.dateCompleted)
-    .map(list => new Date(list.dateCompleted).getTime()) // Convert to timestamps
-    .filter((value, index, self) => self.indexOf(value) === index)
-    .sort((a, b) => a - b) // Compare timestamps
-    .map(timestamp => new Date(timestamp).toISOString()); // Convert back to date strings
-  
+  const sortedCompletedListDates = this.calculateSortedCompletedListDates();
 
   function countConsecutiveDates(dates) {
     if (dates.length === 0) {
       return 0; // No streak if there are no dates
     }
-  
-    // Get the current date
-    const currentDate = new Date();
+
+    // Get the last item in the date array
+    const lastCompletedDate = new Date(dates[dates.length - 1]);
+    console.log('lastCompletedDate', lastCompletedDate)
   
     let count = 0; // Initialize count
   
     // Iterate through the dates from most recent to oldest
     for (let index = dates.length - 1; index >= 0; index--) {
-      if (isSameDay(dates[index], currentDate)) {
+      const listDate = new Date(dates[index]);
+      if (isSameDay(listDate, lastCompletedDate)) {
         count++;
       } else {
         break; // Stop counting when a non-consecutive date is encountered
       }
-      currentDate.setDate(currentDate.getDate() - 1); // Move to the previous day
+      lastCompletedDate.setDate(lastCompletedDate.getDate() - 1); // Move to the previous day
     }
   
     return count;
@@ -58,7 +65,7 @@ UserSchema.virtual("currentStreak").get(function () {
     );
   }
 
-  console.log("sortedCompletedListDates:", sortedCompletedListDates)
+  // console.log("sortedCompletedListDates:", sortedCompletedListDates)
 
   const currentStreak = countConsecutiveDates(sortedCompletedListDates)
   
@@ -67,52 +74,46 @@ UserSchema.virtual("currentStreak").get(function () {
 });
 
 UserSchema.virtual("recordStreak").get(function () {
-  // Function to calculate the streak for a given list of completed lists
-  // function calculateStreak(completedLists) {
-  //   let count = 0;
-  //   let maxStreak = 0;
-  //   let lastCompletedListDate = new Date(completedLists[completedLists.length - 1].timeCompleted);
-  //   lastCompletedListDate.setHours(0, 0, 0, 0);
+  const sortedCompletedListDates = this.calculateSortedCompletedListDates();
 
-  //   for (let i = completedLists.length - 2; i >= 0; i--) {
-  //     const previousDate = new Date(completedLists[i].timeCompleted);
-  //     previousDate.setHours(0, 0, 0, 0);
-  //     const timeDifference = lastCompletedListDate - previousDate;
+  function findLongestStreak(dates) {
+    let longestStreak = 0;
+    let currentStreak = 0;
 
-  //     if (timeDifference <= 24 * 60 * 60 * 1000) {
-  //       count++;
-  //     } else {
-  //       if (count > maxStreak) {
-  //         maxStreak = count;
-  //       }
-  //       count = 0;
-  //     }
+    for (let i = 0; i < dates.length - 1; i++) {
+      const currentDate = new Date(dates[i]);
+      const nextDate = new Date(dates[i + 1]);
 
-  //     lastCompletedListDate = previousDate;
-  //   }
+      // Check if the current date and the next date are consecutive days
+      if (
+        currentDate.getDate() === nextDate.getDate() - 1 &&
+        currentDate.getMonth() === nextDate.getMonth() &&
+        currentDate.getFullYear() === nextDate.getFullYear()
+      ) {
+        currentStreak++;
+      } else {
+        // Reset the current streak if dates are not consecutive
+        currentStreak = 0;
+      }
 
-  //   if (count > maxStreak) {
-  //     maxStreak = count;
-  //   }
+      // Update the longest streak if the current streak is longer
+      if (currentStreak > longestStreak) {
+        longestStreak = currentStreak;
+      }
+    }
 
-  //   return maxStreak;
-  // }
+    return longestStreak + 1; // Add 1 to include the last date in the streak
+  }
 
-  // const completedLists = this.lists.filter((list) => list.completed);
-  // completedLists.sort((a, b) => {
-  //   const dateA = new Date(a.timeCompleted);
-  //   const dateB = new Date(b.timeCompleted);
-  //   return dateA - dateB;
-  // });
+  const longestStreak = findLongestStreak(sortedCompletedListDates);
 
-  // const recordStreak = calculateStreak(completedLists);
-
-  // return recordStreak;
-
-  return 3
+  // Adjust value to return 0 if longest streak is just one. Single streaks do not count as a streak.
+  if (sortedCompletedListDates.length === 0) {
+    return 0
+  } else {
+  return longestStreak;
+  }
 });
-
-
 
 // Export model
 module.exports = mongoose.model("User", UserSchema);
