@@ -16,97 +16,100 @@ UserSchema.virtual("completedLists").get(function () {
   return completedLists.length;
 });
 
+
 UserSchema.virtual("currentStreak").get(function () {
-  const completedListDates = this.lists
+  const sortedCompletedListDates = this.lists
     .filter(list => list.dateCompleted)
-    .map(list => list.dateCompleted)
-
-  // function countConsecutiveDates(dates) {
-  //   if (dates.length === 0) {
-  //     return 0; // No streak if there are no completedLists
-  //   }
-  
-  // //   let count = 0;
-  // //   let lastCompletedListDate = DateTime.fromISO(dates[dates.length - 1]).toFormat("MM/dd/yyyy");
-  
-  // //   for (let i = dates.length - 2; i >= 0; i--) {
-  // //     const previousDate = new Date(dates[i]).toDateString();
-  
-  // //     if (lastCompletedListDate === previousDate) {
-  // //       count++;
-  // //     } else {
-  // //       break; // If the time difference is too large, the streak is broken
-  // //     }
-  
-  // //     lastCompletedListDate = previousDate; // Update currentDate to the previous date
-  // //   }
-  
-  // //   return count;
-  // // }
-  
-  // return 3
-  // }
+    .map(list => new Date(list.dateCompleted).getTime()) // Convert to timestamps
+    .filter((value, index, self) => self.indexOf(value) === index)
+    .sort((a, b) => a - b) // Compare timestamps
+    .map(timestamp => new Date(timestamp).toISOString()); // Convert back to date strings
   
 
-  // const completedListDates = this.lists.filter(list => list.dateCompleted)
-  // .map(list => list.dateCompleted)
-  // .filter((value, index, self) => self.indexOf(value) === index)
-  // .sort((a, b) => {
-  //   const dateA = new Date(a);
-  //   const dateB = new Date(b);
-  //   return dateA - dateB;
-  // });
+  function countConsecutiveDates(dates) {
+    if (dates.length === 0) {
+      return 0; // No streak if there are no dates
+    }
+  
+    // Get the current date
+    const currentDate = new Date();
+  
+    let count = 0; // Initialize count
+  
+    // Iterate through the dates from most recent to oldest
+    for (let index = dates.length - 1; index >= 0; index--) {
+      if (isSameDay(dates[index], currentDate)) {
+        count++;
+      } else {
+        break; // Stop counting when a non-consecutive date is encountered
+      }
+      currentDate.setDate(currentDate.getDate() - 1); // Move to the previous day
+    }
+  
+    return count;
+  }
+  
+  // Helper function to check if two Date objects are on the same day
+  function isSameDay(date1, date2) {
+    return (
+      date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear()
+    );
+  }
 
-  console.log("completedListDates:", completedListDates)
+  console.log("sortedCompletedListDates:", sortedCompletedListDates)
 
-  // const currentStreak = countConsecutiveDates(completedListDates);
-
-  // return currentStreak;
-  return 3
+  const currentStreak = countConsecutiveDates(sortedCompletedListDates)
+  
+  return currentStreak;
+  
 });
 
 UserSchema.virtual("recordStreak").get(function () {
   // Function to calculate the streak for a given list of completed lists
-  function calculateStreak(completedLists) {
-    let count = 0;
-    let maxStreak = 0;
-    let lastCompletedListDate = new Date(completedLists[completedLists.length - 1].timeCompleted);
-    lastCompletedListDate.setHours(0, 0, 0, 0);
+  // function calculateStreak(completedLists) {
+  //   let count = 0;
+  //   let maxStreak = 0;
+  //   let lastCompletedListDate = new Date(completedLists[completedLists.length - 1].timeCompleted);
+  //   lastCompletedListDate.setHours(0, 0, 0, 0);
 
-    for (let i = completedLists.length - 2; i >= 0; i--) {
-      const previousDate = new Date(completedLists[i].timeCompleted);
-      previousDate.setHours(0, 0, 0, 0);
-      const timeDifference = lastCompletedListDate - previousDate;
+  //   for (let i = completedLists.length - 2; i >= 0; i--) {
+  //     const previousDate = new Date(completedLists[i].timeCompleted);
+  //     previousDate.setHours(0, 0, 0, 0);
+  //     const timeDifference = lastCompletedListDate - previousDate;
 
-      if (timeDifference <= 24 * 60 * 60 * 1000) {
-        count++;
-      } else {
-        if (count > maxStreak) {
-          maxStreak = count;
-        }
-        count = 0;
-      }
+  //     if (timeDifference <= 24 * 60 * 60 * 1000) {
+  //       count++;
+  //     } else {
+  //       if (count > maxStreak) {
+  //         maxStreak = count;
+  //       }
+  //       count = 0;
+  //     }
 
-      lastCompletedListDate = previousDate;
-    }
+  //     lastCompletedListDate = previousDate;
+  //   }
 
-    if (count > maxStreak) {
-      maxStreak = count;
-    }
+  //   if (count > maxStreak) {
+  //     maxStreak = count;
+  //   }
 
-    return maxStreak;
-  }
+  //   return maxStreak;
+  // }
 
-  const completedLists = this.lists.filter((list) => list.completed);
-  completedLists.sort((a, b) => {
-    const dateA = new Date(a.timeCompleted);
-    const dateB = new Date(b.timeCompleted);
-    return dateA - dateB;
-  });
+  // const completedLists = this.lists.filter((list) => list.completed);
+  // completedLists.sort((a, b) => {
+  //   const dateA = new Date(a.timeCompleted);
+  //   const dateB = new Date(b.timeCompleted);
+  //   return dateA - dateB;
+  // });
 
-  const recordStreak = calculateStreak(completedLists);
+  // const recordStreak = calculateStreak(completedLists);
 
-  return recordStreak;
+  // return recordStreak;
+
+  return 3
 });
 
 
