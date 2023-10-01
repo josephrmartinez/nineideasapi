@@ -45,25 +45,23 @@ const topicController = {
 
   getNewTopic: asyncHandler(async (req, res) => {
     try {
-      let completedListTopics = [];
+      let usersExistingTopics = new Set()
   
       // Check if the user is authenticated and get the completedListTopics
-      if (req.user) {
-        const currentUserID = req.user
-        const user = await User.findById(currentUserID).populate('lists');
-        completedListTopics = user.lists.map((list) => list.topic);
+      if (req.user && req.user.lists) {
+        // Populate the Set with the user's list topics
+        for (const list of req.user.lists) {
+          usersExistingTopics.add(list.topic.toString());
       }
-      // Fetch a random topic that the user has not already written a list on
-      const newTopic = await Topic.aggregate([
-        { $match: { name: { $nin: completedListTopics } } },
-        { $sample: { size: 1 } },
-      ]);
-  
-      if (newTopic.length === 0) {
-        // If no new topics are available, respond with an appropriate message
-        return res.json({ message: 'No new topics available' });
       }
-  
+      let newTopic;
+      do {
+        // Fetch a random topic
+        newTopic = await Topic.aggregate([
+          { $sample: { size: 1 } },
+        ]);
+      } while (usersExistingTopics.has(newTopic[0]._id.toString())); // Check if the user has written a list on this topic
+      
       // Respond with the random new topic
       res.json(newTopic[0]);
       

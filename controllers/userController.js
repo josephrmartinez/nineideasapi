@@ -1,13 +1,12 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/user');
-const List = require('../models/list')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 const userController = {
   registerUser: asyncHandler(async (req, res, next) => {
-    const { username, password, email, bio } = req.body;
+    const { username, password, bio } = req.body;
   
     try {
       const hashedPassword = await bcrypt.hash(password, 10);

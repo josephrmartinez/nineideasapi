@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const { DateTime } = require("luxon")
 
 const ListSchema = new Schema({
   topic: { type: Schema.Types.ObjectId, required: true, ref: "Topic" },
@@ -14,10 +13,6 @@ const ListSchema = new Schema({
   completed: { type: Boolean, default: false },
   public: { type: Boolean, default: false }
 });
-
-ListSchema.virtual("timeStarted_formatted").get(function(){
-  return DateTime.fromJSDate(this.timeStarted).toLocaleString(DateTime.DATETIME_SHORT)
-})
 
 
 // Export model
