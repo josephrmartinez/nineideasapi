@@ -37,7 +37,6 @@ UserSchema.virtual("currentStreak").get(function () {
 
     // Get the last item in the date array
     const lastCompletedDate = new Date(dates[dates.length - 1]);
-    console.log('lastCompletedDate', lastCompletedDate)
   
     let count = 0; // Initialize count
   
@@ -64,12 +63,9 @@ UserSchema.virtual("currentStreak").get(function () {
     );
   }
 
-  // console.log("sortedCompletedListDates:", sortedCompletedListDates)
-
   const currentStreak = countConsecutiveDates(sortedCompletedListDates)
   
   return currentStreak;
-  
 });
 
 UserSchema.virtual("recordStreak").get(function () {
