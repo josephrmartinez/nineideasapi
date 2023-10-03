@@ -17,15 +17,41 @@ const listController = {
   }),
 
 
-  getAllLists: asyncHandler(async (req, res) => {
+  // getAllLists: asyncHandler(async (req, res) => {
+  //   try {
+  //     // Implement logic to fetch all published lists with visibility set to "public"
+  //     const lists = await List.find({ public: true })
+  //       .sort({ timeCompleted: -1 }) // Sort by timeCompleted in descending order
+  //       .limit(20) // Limit the result to 20 documents
+  //       .populate({path: "author", select: "username"})
+  //       .populate({path: "topic", select: "name"})
+  //       .exec();
+  //     // Respond with the lists data
+  //     res.json(lists);
+  //   } catch (error) {
+  //     // Handle any errors that occur during the database query or processing
+  //     res.status(500).json({ error: 'An error occurred while fetching lists' });
+  //   }
+  // }),
+
+
+  getLists: asyncHandler(async (req, res) => {
     try {
+      const { page = 1 } = req.body;
+  
+      const pageSize = 20
+      // Calculate the skip value based on the page and pageSize
+      const skip = (page - 1) * pageSize;
+  
       // Implement logic to fetch all published lists with visibility set to "public"
       const lists = await List.find({ public: true })
         .sort({ timeCompleted: -1 }) // Sort by timeCompleted in descending order
-        .limit(20) // Limit the result to 20 documents
-        .populate({path: "author", select: "username"})
-        .populate({path: "topic", select: "name"})
+        .skip(skip) // Skip the specified number of documents
+        .limit(Number(pageSize)) // Limit the result to the specified number of documents
+        .populate({ path: "author", select: "username" })
+        .populate({ path: "topic", select: "name" })
         .exec();
+  
       // Respond with the lists data
       res.json(lists);
     } catch (error) {
@@ -33,7 +59,7 @@ const listController = {
       res.status(500).json({ error: 'An error occurred while fetching lists' });
     }
   }),
-
+  
 
   getListById: asyncHandler(async (req, res) => {
     // Implement logic to find and return a list by ID
