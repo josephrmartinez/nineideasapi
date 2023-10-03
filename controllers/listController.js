@@ -37,7 +37,10 @@ const listController = {
 
   getLists: asyncHandler(async (req, res) => {
     try {
-      const { page = 1 } = req.body;
+      const page = req.params.page || 1;
+
+      console.log("req.params.page", req.params.page)
+      console.log("page", page)
   
       const pageSize = 20
       // Calculate the skip value based on the page and pageSize

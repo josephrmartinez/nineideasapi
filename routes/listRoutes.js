@@ -3,7 +3,8 @@ const router = express.Router();
 const listController = require('../controllers/listController');
 
 // Define the API routes related to lists
-router.get('/', listController.getLists);
+// router.get('/', listController.getLists);
+router.get('/page/:page', listController.getLists);
 router.post('/', listController.createList);
 router.get('/:id', listController.getListById);
 router.put('/:id', listController.updateList);
