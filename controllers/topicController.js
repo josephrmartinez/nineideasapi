@@ -64,8 +64,8 @@ const topicController = {
           { $sample: { size: 1 } },
         ]);
         console.log("do...while newTopic:", newTopic)
-        if (Date.now() - startTime > 3000) {
-          break; // Exit the loop if it's running for more than 3 seconds
+        if (Date.now() - startTime > 2000) {
+          break; // Exit the loop if it's running for more than 2 seconds. This will return a previously used topic.
         }
       } while (usersExistingTopics.has(newTopic[0]._id.toString())); // Check if the user has written a list on this topic
       
