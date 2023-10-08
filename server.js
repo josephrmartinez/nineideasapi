@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
 
 
-const authenticateUser = (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
   
   if (authorizationHeader) {
@@ -43,7 +43,20 @@ const authenticateUser = (req, res, next) => {
     if (token) {
       try {
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);
-        req.user = decodedToken.userId;
+        // req.user = decodedToken.userId;
+        console.log("req.user in authenticateUser:", req.user)
+
+        req.user = await User.findById(decodedToken.userId)
+        .populate({
+          path: 'lists',
+          populate: [
+            { path: 'topic' },
+            { path: 'likes', select: '_id' }
+          ],
+          select: 'topic likes public completed timeCompleted timeStarted dateCompleted'
+        })
+        .exec();
+
       } catch (error) {
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
           // Invalid token or expired token

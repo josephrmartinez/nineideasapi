@@ -78,7 +78,8 @@ const userController = {
         // If user is not found, return a 404 Not Found response
         return res.status(404).json({ error: 'User not found' });
       }
-  
+      
+      console.log("req.user in getUserById", req.user)
       const isAuthenticatedUser = req.user === req.params.id
 
       // Filter lists based on visibility
