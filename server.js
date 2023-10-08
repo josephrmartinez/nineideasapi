@@ -43,8 +43,6 @@ const authenticateUser = async (req, res, next) => {
     if (token) {
       try {
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);
-        // req.user = decodedToken.userId;
-        console.log("req.user in authenticateUser:", req.user)
 
         req.user = await User.findById(decodedToken.userId)
         .populate({
@@ -56,6 +54,7 @@ const authenticateUser = async (req, res, next) => {
           select: 'topic likes public completed timeCompleted timeStarted dateCompleted'
         })
         .exec();
+        // console.log("req.user in authenticateUser:", req.user)
 
       } catch (error) {
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {

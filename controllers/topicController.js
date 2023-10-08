@@ -44,42 +44,51 @@ const topicController = {
   }),
 
   getNewTopic: asyncHandler(async (req, res) => {
-    try {
-      // let usersExistingTopics = new Set()
-      // // req.user is UNDEFINED
-      // console.log("req.user in getNewTopic", req.user)
-      // console.log("req.user.lists", req.user.lists)
-  
-      // // Check if the user is authenticated and get the completedListTopics
-      // if (req.user && req.user.lists) {
-      //   // Populate the Set with the user's list topics
-      //   for (const list of req.user.lists) {
-      //     usersExistingTopics.add(list.topic.toString());
-      // }
-      // console.log("usersExistingTopics:", usersExistingTopics)
-      // }
-      // let newTopic;
-      // do {
-      //   // Fetch a random topic
-      //   newTopic = await Topic.aggregate([
-      //     { $sample: { size: 1 } },
-      //   ]);
-      // } while (usersExistingTopics.has(newTopic[0]._id.toString())); // Check if the user has written a list on this topic
+    try {  
+      // Check if the user is authenticated and get the completedListTopics
+      if (req.user && req.user.lists) {
+        let usersExistingTopics = new Set()
+        // Populate the Set with the user's list topics
+        for (const list of req.user.lists) {
+          usersExistingTopics.add(list.topic._id.toString());
+      }
+      console.log("usersExistingTopics:", usersExistingTopics)
+
+      let newTopic;
+      let startTime = Date.now(); // Record the start time to limit the do... while loop
+
+      do {
+        // Fetch a random topic
+        newTopic = await Topic.aggregate([
+          { $match: { public: true } },
+          { $sample: { size: 1 } },
+        ]);
+        console.log("do...while newTopic:", newTopic)
+        if (Date.now() - startTime > 3000) {
+          break; // Exit the loop if it's running for more than 3 seconds
+        }
+      } while (usersExistingTopics.has(newTopic[0]._id.toString())); // Check if the user has written a list on this topic
       
-      // // Respond with the random new topic
-      // res.json(newTopic[0]);
+      // Respond with the random new topic
+      res.json(newTopic[0]);
+
+      } else {
       
       let newTopic = await Topic.aggregate([
         { $match: { public: true } },
         { $sample: { size: 1 } },
       ]);
       res.json(newTopic[0]);
-
+    }
     } catch (error) {
       // Handle any errors that occur during the database query or processing
       res.status(500).json({ error: error.message });
     }
   })
+
+  
+
+  
 }
 
 module.exports = topicController;
