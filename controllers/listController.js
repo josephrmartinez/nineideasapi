@@ -39,8 +39,8 @@ const listController = {
     try {
       const page = req.params.page || 1;
 
-      console.log("req.params.page", req.params.page)
-      console.log("page", page)
+      console.log("getLists req.params.page", req.params.page)
+      console.log("getLists page", page)
   
       const pageSize = 20
       // Calculate the skip value based on the page and pageSize
