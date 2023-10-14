@@ -47,14 +47,11 @@ const topicController = {
     try {  
       // Check if the user is authenticated and get the completedListTopics
       if (req.user && req.user.lists) {
-        console.log("req.user", req.user)
         let usersExistingTopics = new Set()
         // Populate the Set with the user's list topics
         for (const list of req.user.lists) {
           usersExistingTopics.add(list.topic._id.toString());
       }
-      console.log("usersExistingTopics:", usersExistingTopics)
-
       let newTopic;
       let startTime = Date.now(); // Record the start time to limit the do... while loop
 
@@ -64,7 +61,7 @@ const topicController = {
           { $match: { public: true } },
           { $sample: { size: 1 } },
         ]);
-        console.log("do...while newTopic:", newTopic)
+        
         if (Date.now() - startTime > 2000) {
           break; // Exit the loop if it's running for more than 2 seconds. This will return a previously used topic.
         }

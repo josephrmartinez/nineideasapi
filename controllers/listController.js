@@ -17,30 +17,9 @@ const listController = {
   }),
 
 
-  // getAllLists: asyncHandler(async (req, res) => {
-  //   try {
-  //     // Implement logic to fetch all published lists with visibility set to "public"
-  //     const lists = await List.find({ public: true })
-  //       .sort({ timeCompleted: -1 }) // Sort by timeCompleted in descending order
-  //       .limit(20) // Limit the result to 20 documents
-  //       .populate({path: "author", select: "username"})
-  //       .populate({path: "topic", select: "name"})
-  //       .exec();
-  //     // Respond with the lists data
-  //     res.json(lists);
-  //   } catch (error) {
-  //     // Handle any errors that occur during the database query or processing
-  //     res.status(500).json({ error: 'An error occurred while fetching lists' });
-  //   }
-  // }),
-
-
   getLists: asyncHandler(async (req, res) => {
     try {
       const page = req.params.page || 1;
-
-      console.log("getLists req.params.page", req.params.page)
-      console.log("getLists page", page)
   
       const pageSize = 20
       // Calculate the skip value based on the page and pageSize
@@ -115,7 +94,7 @@ const listController = {
 
     if (list) {
       const authorId = list.author._id
-      console.log("extracted author ID:", authorId)
+      // console.log("extracted author ID:", authorId)
 
       // Implement logic to delete the list by ID
       await List.findByIdAndDelete(req.params.id);

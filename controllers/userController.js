@@ -60,8 +60,6 @@ const userController = {
   },
 
 
-
-  // TROUBLESHOOT: NOT DISPLAYING DRAFT LISTS
   getUserById: asyncHandler(async (req, res) => {
     try {
       const user = await User.findById(req.params.id)
