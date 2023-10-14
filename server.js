@@ -43,7 +43,7 @@ const authenticateUser = async (req, res, next) => {
     if (token) {
       try {
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);
-
+        console.log("decodedToken", decodedToken)
         req.user = await User.findById(decodedToken.userId)
         .populate({
           path: 'lists',

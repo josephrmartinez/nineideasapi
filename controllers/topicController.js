@@ -47,6 +47,7 @@ const topicController = {
     try {  
       // Check if the user is authenticated and get the completedListTopics
       if (req.user && req.user.lists) {
+        console.log("req.user", req.user)
         let usersExistingTopics = new Set()
         // Populate the Set with the user's list topics
         for (const list of req.user.lists) {
