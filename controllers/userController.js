@@ -78,11 +78,9 @@ const userController = {
         return res.status(404).json({ error: 'User not found' });
       }
       
-      // console.log("req.user._id in getUserById", req.user._id)
-      // console.log("req.params.id in getUserById:", req.params.id )
       let isAuthenticatedUser;
       isAuthenticatedUser = req.user?._id.toString() === req.params.id
-      // console.log("isAuthenticatedUser in userController", isAuthenticatedUser)
+      
 
       // Filter lists based on visibility
       const filteredLists = user.lists.filter(list => isAuthenticatedUser || list.public);
